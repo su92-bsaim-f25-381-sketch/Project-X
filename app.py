@@ -3,15 +3,27 @@ from bot_engine import ProjectXEngine
 
 app = Flask(__name__)
 engine = ProjectXEngine()
-custom_balance = 1000.0
 
 @app.route("/")
 def home():
     return send_file("index.html")
 
+@app.route("/api/login_exness", methods=["POST"])
+def login_exness():
+    data = request.json
+    login = data.get("login")
+    password = data.get("password")
+    server = data.get("server")
+
+    if not login or not password or not server:
+        return jsonify({"success": False, "message": "⚠️ Please fill all login fields!"})
+
+    success, message = engine.connect_exness_account(login, password, server)
+    return jsonify({"success": success, "message": message})
+
 @app.route("/api/status", methods=["GET"])
 def get_status():
-    bal = engine.get_account_balance() if engine.mt5_connected else custom_balance
+    bal = engine.get_account_balance()
     return jsonify({
         "balance": round(bal, 2),
         "risk_percentage": engine.risk_percentage,
@@ -29,13 +41,6 @@ def get_status():
 def toggle():
     engine.is_active = not engine.is_active
     return jsonify({"success": True, "is_active": engine.is_active})
-
-@app.route("/api/update_balance", methods=["POST"])
-def update_balance():
-    global custom_balance
-    data = request.json
-    custom_balance = float(data.get("balance", custom_balance))
-    return jsonify({"success": True})
 
 @app.route("/api/update_risk", methods=["POST"])
 def update_risk():
