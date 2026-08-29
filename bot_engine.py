@@ -1,9 +1,12 @@
 import MetaTrader5 as mt5
+import pandas as pd
+import numpy as np
 import random
 
 class ProjectXEngine:
-    def __init__(self, symbol="EURUSD", risk_percentage=2.0):
+    def __init__(self, symbol="EURUSD", timeframe=mt5.TIMEFRAME_M15, risk_percentage=2.0):
         self.symbol = symbol
+        self.timeframe = timeframe
         self.risk_percentage = risk_percentage
         self.is_active = False
         self.total_trades = 0
@@ -14,20 +17,56 @@ class ProjectXEngine:
         # MetaTrader 5 Initialization
         self.mt5_connected = mt5.initialize()
         if self.mt5_connected:
-            print("✅ MetaTrader 5 Connected Successfully")
+            print(f"✅ MetaTrader 5 Connected Successfully ({self.symbol})")
         else:
-            print("⚠️ MT5 Connection Failed (Running in Simulation Mode)")
+            print("⚠️ MT5 Connection Failed (Running in Indicator Simulation Mode)")
 
     def get_account_balance(self):
-        """MT5 Account balance fetch karta hai (fallback $1000 agar MT5 connection off ho)"""
+        """MT5 Account balance fetch karta hai"""
         if self.mt5_connected:
             info = mt5.account_info()
             if info is not None:
                 return info.balance
         return 1000.0
 
+    def calculate_indicators(self):
+        """
+        Calculates EMA 9, EMA 21, and RSI (14) indicators from MT5 market candles.
+        """
+        if self.mt5_connected:
+            # MT5 se last 100 candles (OHLCV) fetch karte hain
+            rates = mt5.copy_rates_from_pos(self.symbol, self.timeframe, 0, 100)
+            if rates is not None and len(rates) > 0:
+                df = pd.DataFrame(rates)
+                
+                # EMA (9) & EMA (21) Calculation
+                df['ema9'] = df['close'].ewm(span=9, adjust=False).mean()
+                df['ema21'] = df['close'].ewm(span=21, adjust=False).mean()
+
+                # RSI (14) Calculation
+                delta = df['close'].diff()
+                gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
+                loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+                rs = gain / loss
+                df['rsi'] = 100 - (100 / (1 + rs))
+
+                latest = df.iloc[-1]
+                return (
+                    round(latest['close'], 5), 
+                    round(latest['ema9'], 5), 
+                    round(latest['ema21'], 5), 
+                    round(latest['rsi'], 2)
+                )
+
+        # Simulation Mode (Agar MT5 terminal open na ho)
+        close_price = round(random.uniform(1.0800, 1.0950), 5)
+        ema9 = round(close_price + random.uniform(-0.0005, 0.0005), 5)
+        ema21 = round(close_price + random.uniform(-0.0010, 0.0010), 5)
+        rsi = round(random.uniform(25, 75), 2)
+        return close_price, ema9, ema21, rsi
+
     def calculate_lot_size(self, balance, stop_loss_pips=20):
-        """Account balance aur risk % ke mutabiq automatic Lot Size calculate karta hai"""
+        """Risk % aur pip value ke mutabiq dynamic Lot Size calculate karta hai"""
         if self.mt5_connected:
             sym_info = mt5.symbol_info(self.symbol)
             if sym_info:
@@ -39,39 +78,52 @@ class ProjectXEngine:
                     lot = round(raw_lot / sym_info.volume_step) * sym_info.volume_step
                     return max(sym_info.volume_min, min(sym_info.volume_max, round(lot, 2)))
 
-        # Default fallback calculation
+        # Fallback calculation
         risk_amount = balance * (self.risk_percentage / 100)
         return max(0.01, round(risk_amount / (stop_loss_pips * 10), 2))
 
     def analyze_strategy(self):
         """
-        Strategy Scanner:
-        Buyers vs Sellers pressure aur Trendline check karke signal generate karta hai.
+        Strategy Execution Logic using EMA 9/21 Cross + RSI 14 Filter
         """
-        buyer_power = random.randint(30, 95)
-        seller_power = 100 - buyer_power
+        close_price, ema9, ema21, rsi = self.calculate_indicators()
         
-        if buyer_power >= 65:
-            trend = "BUY"
-            thinking_msg = f"Bullish Trend Detected! Buyers Power: {buyer_power}%"
-        elif seller_power >= 65:
-            trend = "SELL"
-            thinking_msg = f"Bearish Trend Detected! Sellers Power: {seller_power}%"
-        else:
-            trend = "NEUTRAL"
-            thinking_msg = f"Consolidating/Ranging Market. Buyers: {buyer_power}% | Sellers: {seller_power}%"
+        signal = "NEUTRAL"
+        thinking_msg = ""
+
+        # Strategy Rules:
+        # BUY: EMA9 > EMA21 AND RSI > 50 AND RSI < 70 (Not Overbought)
+        if ema9 > ema21 and 50 <= rsi < 70:
+            signal = "BUY"
+            thinking_msg = f"🟢 BUY SIGNAL: EMA9 ({ema9}) > EMA21 ({ema21}) | RSI Bullish ({rsi})"
             
-        return trend, buyer_power, seller_power, thinking_msg
+        # SELL: EMA9 < EMA21 AND RSI < 50 AND RSI > 30 (Not Oversold)
+        elif ema9 < ema21 and 30 < rsi <= 50:
+            signal = "SELL"
+            thinking_msg = f"🔴 SELL SIGNAL: EMA9 ({ema9}) < EMA21 ({ema21}) | RSI Bearish ({rsi})"
+            
+        # Overbought Warning
+        elif rsi >= 70:
+            thinking_msg = f"⚠️ Overbought Market (RSI: {rsi}) | Holding Trades"
+            
+        # Oversold Warning
+        elif rsi <= 30:
+            thinking_msg = f"⚠️ Oversold Market (RSI: {rsi}) | Holding Trades"
+            
+        else:
+            thinking_msg = f"👀 Ranging Market | Price: {close_price} | EMA9: {ema9} | EMA21: {ema21} | RSI: {rsi}"
+
+        return signal, thinking_msg, rsi, ema9, ema21
 
     def execute_trade(self, signal, stop_loss_pips=20, take_profit_pips=40):
-        """Trade execute karta hai (MT5 terminal real order ya simulation)"""
+        """Real MT5 Order placement or Simulation execution"""
         if not self.is_active or signal == "NEUTRAL":
             return None
 
         current_balance = self.get_account_balance()
         lot_size = self.calculate_lot_size(current_balance, stop_loss_pips)
 
-        # Real MT5 Order Send Attempt
+        # MT5 Real Trade Execution
         if self.mt5_connected:
             sym_info = mt5.symbol_info(self.symbol)
             if sym_info and sym_info.visible:
@@ -93,7 +145,7 @@ class ProjectXEngine:
                     "tp": round(tp, sym_info.digits),
                     "deviation": 20,
                     "magic": 100200,
-                    "comment": "Project X Auto Trade",
+                    "comment": "Project X Indicator Strategy",
                     "type_time": mt5.ORDER_TIME_GTC,
                     "type_filling": mt5.ORDER_FILLING_IOC,
                 }
@@ -110,7 +162,7 @@ class ProjectXEngine:
                     self.trade_history.append(record)
                     return record
 
-        # Simulation Mode Result (Agar MT5 open nahi hai)
+        # Simulation Mode Trade Result
         is_win = random.choice([True, True, False])
         pnl = (take_profit_pips * lot_size * 10) if is_win else -(stop_loss_pips * lot_size * 10)
         
