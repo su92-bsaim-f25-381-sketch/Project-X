@@ -1,70 +1,94 @@
+<!-- 
+  Project X - Single HTML Web Application
+  This file serves as the HTML Frontend User Interface.
+  To run the web app with Python Backend, execute: python -c "import index; index.run()"
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project X - Trading Bot Dashboard</title>
+    <title>Project X - Trading Bot Interface</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { text-align: center; color: #38bdf8; margin-bottom: 30px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .card { background: #1e293b; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
-        .metric-title { font-size: 0.9rem; color: #94a3b8; margin-bottom: 5px; }
-        .metric-value { font-size: 1.8rem; font-weight: bold; color: #f8fafc; }
-        .btn { border: none; padding: 12px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1rem; transition: 0.2s; }
+        body { background-color: #0b0f19; color: #f1f5f9; margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1 { text-align: center; color: #38bdf8; letter-spacing: 1px; margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .card h3 { margin-top: 0; color: #94a3b8; font-size: 1.05rem; }
+        .metric-title { font-size: 0.85rem; color: #64748b; }
+        .metric-value { font-size: 1.7rem; font-weight: bold; color: #38bdf8; margin-top: 5px; }
+        
+        /* Bot Thinking Radar Box */
+        .thinking-box { background: #0f172a; border-left: 4px solid #38bdf8; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .thinking-status { font-weight: bold; color: #f59e0b; display: flex; align-items: center; gap: 8px; }
+        .pulse { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; animation: blink 1.2s infinite; }
+        @keyframes blink { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
+
+        /* Buttons & Inputs */
+        input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; margin-top: 5px; font-size: 0.95rem; }
+        .btn { border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 10px; transition: 0.2s; }
         .btn-start { background-color: #22c55e; color: #fff; }
         .btn-start:hover { background-color: #16a34a; }
         .btn-stop { background-color: #ef4444; color: #fff; }
         .btn-stop:hover { background-color: #dc2626; }
-        .btn-update { background-color: #0ea5e9; color: #fff; margin-top: 10px; }
-        input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; margin-top: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; }
+        .btn-update { background-color: #0ea5e9; color: #fff; }
+
+        /* Tables & Status Badges */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; font-size: 0.9rem; }
         th { background-color: #0f172a; color: #94a3b8; }
         .status-win { color: #4ade80; font-weight: bold; }
         .status-loss { color: #f87171; font-weight: bold; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
         .badge-active { background: #166534; color: #4ade80; }
         .badge-paused { background: #991b1b; color: #f87171; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🤖 Project X - Trading Bot Dashboard</h1>
+        <h1>🤖 Project X - Auto Trading Bot Dashboard</h1>
 
-        <!-- Settings & Status Controls -->
+        <!-- Top Controls -->
         <div class="grid">
             <div class="card">
                 <h3>⚙️ Account Balance</h3>
                 <label class="metric-title">Customize Balance ($)</label>
                 <input type="number" id="balanceInput" value="1000">
-                <button class="btn btn-update" onclick="updateSettings()">Update Balance</button>
+                <button class="btn btn-update" onclick="updateBalance()">Update Balance</button>
             </div>
             <div class="card">
                 <h3>🛡️ Risk Control</h3>
                 <label class="metric-title">Risk Per Trade (%)</label>
                 <input type="number" id="riskInput" value="2.0" step="0.5">
-                <button class="btn btn-update" onclick="updateSettings()">Update Risk</button>
+                <button class="btn btn-update" onclick="updateRisk()">Update Risk</button>
             </div>
             <div class="card">
-                <h3>⚡ Bot Control</h3>
+                <h3>⚡ Bot Power Control</h3>
                 <p>Status: <span id="statusBadge" class="badge badge-paused">PAUSED</span></p>
                 <button id="toggleBtn" class="btn btn-start" onclick="toggleBot()">🟢 START BOT</button>
             </div>
         </div>
 
+        <!-- Bot Thinking & Strategy Status Box -->
+        <div class="thinking-box">
+            <div class="thinking-status">
+                <span class="pulse"></span> 🧠 Bot Thinking & Market Analysis:
+            </div>
+            <div id="thinkingMsg" style="margin-top: 6px; color: #cbd5e1;">Bot is currently paused. Press Start to activate market strategy analysis...</div>
+        </div>
+
         <!-- Metric Analytics Cards -->
         <div class="grid">
-            <div class="card"><div class="metric-title">Balance</div><div class="metric-value" id="dispBalance">$1000.00</div></div>
+            <div class="card"><div class="metric-title">Live Balance</div><div class="metric-value" id="dispBalance">$1000.00</div></div>
             <div class="card"><div class="metric-title">Total Trades</div><div class="metric-value" id="dispTotal">0</div></div>
             <div class="card"><div class="metric-title">Wins 🟢</div><div class="metric-value" id="dispWins">0</div></div>
             <div class="card"><div class="metric-title">Losses 🔴</div><div class="metric-value" id="dispLosses">0</div></div>
             <div class="card"><div class="metric-title">Win Rate</div><div class="metric-value" id="dispWinRate">0.00%</div></div>
         </div>
 
-        <!-- Live History Table -->
+        <!-- Recent Trade Logs -->
         <div class="card">
             <h3>📜 Trade History Logs</h3>
             <table>
@@ -74,11 +98,11 @@
                         <th>Lot Size</th>
                         <th>PnL ($)</th>
                         <th>Status</th>
-                        <th>Account Balance</th>
+                        <th>Balance</th>
                     </tr>
                 </thead>
                 <tbody id="historyBody">
-                    <tr><td colspan="5" style="text-align:center;">No trades executed yet.</td></tr>
+                    <tr><td colspan="5" style="text-align:center;">No active trades placed yet.</td></tr>
                 </tbody>
             </table>
         </div>
@@ -109,7 +133,7 @@
                 btn.innerText = '🟢 START BOT';
             }
 
-            // Render Trade History
+            // Render History
             const historyBody = document.getElementById('historyBody');
             if(data.trade_history.length > 0) {
                 historyBody.innerHTML = data.trade_history.map(t => `
@@ -129,23 +153,36 @@
             fetchStatus();
         }
 
-        async function updateSettings() {
+        async function updateBalance() {
             const balance = document.getElementById('balanceInput').value;
-            const risk_percentage = document.getElementById('riskInput').value;
-            await fetch('/api/update_settings', {
+            await fetch('/api/update_balance', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ balance, risk_percentage })
+                body: JSON.stringify({ balance })
             });
             fetchStatus();
         }
 
-        // Live Market Tick Interval (Runs market check every 3 seconds)
+        async function updateRisk() {
+            const risk_percentage = document.getElementById('riskInput').value;
+            await fetch('/api/update_risk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ risk_percentage })
+            });
+            fetchStatus();
+        }
+
+        // Realtime Tick Interval (Every 3 seconds)
         setInterval(async () => {
             const res = await fetch('/api/status');
             const data = await res.json();
             if(data.is_active) {
-                await fetch('/api/tick', { method: 'POST' });
+                const tickRes = await fetch('/api/tick', { method: 'POST' });
+                const tickData = await tickRes.json();
+                if(tickData.thinking) {
+                    document.getElementById('thinkingMsg').innerText = tickData.thinking;
+                }
                 fetchStatus();
             }
         }, 3000);
@@ -154,3 +191,62 @@
     </script>
 </body>
 </html>
+
+<%PYTHON_SERVER_START%>
+from flask import Flask, jsonify, request, send_file
+from bot_engine import ProjectXEngine
+
+app = Flask(__name__)
+engine = ProjectXEngine()
+custom_balance = 1000.0
+
+@app.route("/")
+def home():
+    return send_file("index.html")
+
+@app.route("/api/status", methods=["GET"])
+def get_status():
+    bal = engine.get_account_balance() if engine.mt5_connected else custom_balance
+    total = engine.total_trades
+    return jsonify({
+        "balance": round(bal, 2),
+        "risk_percentage": engine.risk_percentage,
+        "is_active": engine.is_active,
+        "total_trades": total,
+        "wins": engine.wins,
+        "losses": engine.losses,
+        "win_rate": engine.win_rate(),
+        "trade_history": engine.trade_history[::-1]
+    })
+
+@app.route("/api/toggle", methods=["POST"])
+def toggle():
+    engine.is_active = not engine.is_active
+    return jsonify({"success": True, "is_active": engine.is_active})
+
+@app.route("/api/update_balance", methods=["POST"])
+def update_balance():
+    global custom_balance
+    data = request.json
+    custom_balance = float(data.get("balance", custom_balance))
+    return jsonify({"success": True})
+
+@app.route("/api/update_risk", methods=["POST"])
+def update_risk():
+    data = request.json
+    engine.risk_percentage = float(data.get("risk_percentage", 2.0))
+    return jsonify({"success": True})
+
+@app.route("/api/tick", methods=["POST"])
+def tick():
+    if not engine.is_active:
+        return jsonify({"thinking": "Bot Paused."})
+
+    signal, buyers, sellers, thinking = engine.analyze_strategy()
+    if signal != "NEUTRAL":
+        engine.execute_trade(signal)
+    
+    return jsonify({"thinking": thinking, "signal": signal})
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
