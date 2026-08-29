@@ -1,108 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Project X</title>
+<title>Project X | Live Market AI</title>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
 
 body{
     margin:0;
+    background:#050910;
+    color:#fff;
     font-family:Arial,sans-serif;
-    background:#070b12;
-    color:white;
 }
 
 header{
-    padding:24px 20px;
-    background:#0d121b;
-    border-bottom:1px solid #202938;
+    background:#0b111b;
+    border-bottom:1px solid #202b3b;
+    padding:18px;
+    position:sticky;
+    top:0;
+    z-index:10;
 }
 
-h1{
-    margin:0;
-    font-size:30px;
+.header-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.logo{
+    font-size:26px;
+    font-weight:bold;
+}
+
+.live-dot{
+    color:#00e676;
+    font-size:13px;
+    font-weight:bold;
 }
 
 .subtitle{
     color:#8995a8;
-    margin-top:7px;
+    margin-top:6px;
+    font-size:13px;
 }
 
 .container{
-    padding:20px;
+    max-width:1250px;
+    margin:auto;
+    padding:18px;
 }
 
-.grid{
+.section-title{
+    margin:10px 0 12px;
+    font-size:20px;
+}
+
+.market-grid{
     display:grid;
     grid-template-columns:
-    repeat(auto-fit,minmax(180px,1fr));
-    gap:15px;
+    repeat(auto-fit,minmax(125px,1fr));
+    gap:9px;
+    margin-bottom:18px;
+}
+
+.market-btn{
+    padding:13px 8px;
+    border-radius:10px;
+    border:1px solid #263246;
+    background:#101824;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.market-btn:hover,
+.market-btn.active{
+    background:#19314c;
+    border-color:#3d6b96;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(170px,1fr));
+    gap:12px;
+    margin-bottom:15px;
 }
 
 .card{
-    padding:22px;
-    background:#111824;
-    border:1px solid #202938;
-    border-radius:15px;
+    background:#0e1622;
+    border:1px solid #202b3b;
+    border-radius:14px;
+    padding:16px;
+}
+
+.card small{
+    color:#8995a8;
 }
 
 .card h2{
-    margin-top:0;
+    margin:7px 0 0;
+    font-size:20px;
 }
 
-.card p{
-    color:#8995a8;
-    line-height:1.5;
+.chart-card{
+    background:#0e1622;
+    border:1px solid #202b3b;
+    border-radius:15px;
+    overflow:hidden;
+    margin-bottom:15px;
 }
 
-.button{
-    display:block;
-    width:100%;
-    padding:14px;
-    margin-top:15px;
-    border:0;
-    border-radius:10px;
-    background:#1b3049;
-    color:white;
-    text-align:center;
-    text-decoration:none;
+.chart-header{
+    padding:14px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #202b3b;
+}
+
+.symbol{
+    font-size:21px;
     font-weight:bold;
 }
 
-.button:hover{
-    background:#284866;
+.chart-area{
+    width:100%;
+    height:520px;
 }
 
-.status{
-    margin-top:20px;
-    padding:15px;
-    background:#111824;
-    border:1px solid #202938;
-    border-radius:12px;
+.tradingview-container{
+    width:100%;
+    height:100%;
+}
+
+#cryptoChart{
+    width:100%;
+    height:100%;
+}
+
+.controls{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(160px,1fr));
+    gap:10px;
+    margin-bottom:15px;
+}
+
+label{
     color:#8995a8;
+    font-size:13px;
 }
 
-.mode{
-    color:#e6c77a;
+input,
+select{
+    width:100%;
+    margin-top:7px;
+    padding:12px;
+    background:#070d15;
+    color:#fff;
+    border:1px solid #2a374b;
+    border-radius:9px;
 }
+
+.trade-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.trade-btn{
+    padding:16px;
+    border:0;
+    border-radius:11px;
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.buy{
+    background:#087d4f;
+}
+
+.sell{
+    background:#a52b3b;
+}
+
+.reset{
+    width:100%;
+    padding:13px;
+    border:0;
+    border-radius:10px;
+    background:#263449;
+    color:#fff;
+    cursor:pointer;
+}
+
+.analysis{
+    background:#0e1622;
+    border:1px solid #202b3b;
+    border-radius:15px;
+    padding:18px;
+    margin-top:15px;
+}
+
+.analysis-text{
+    color:#9aa7b9;
+    line-height:1.6;
+}
+
+.warning{
+    margin-top:13px;
+    padding:12px;
+    background:#211b0d;
+    border-radius:9px;
+    color:#e4c878;
+    font-size:13px;
+}
+
+@media(max-width:600px){
+
+    .container{
+        padding:11px;
+    }
+
+    .chart-area{
+        height:400px;
+    }
+
+    .header-row{
+        align-items:flex-start;
+    }
+
+}
+
 </style>
 
 </head>
 
+
 <body>
+
 
 <header>
 
-<h1>PROJECT X</h1>
+<div class="header-row">
+
+<div class="logo">
+PROJECT X
+</div>
+
+<div class="live-dot">
+● LIVE SYSTEM
+</div>
+
+</div>
 
 <div class="subtitle">
-AI Market Analysis & Paper Trading Dashboard
+AI Market Analysis • Multi-Market Dashboard • Paper Trading
 </div>
 
 </header>
@@ -110,111 +276,1026 @@ AI Market Analysis & Paper Trading Dashboard
 
 <main class="container">
 
-<div class="grid">
+
+<h2 class="section-title">
+Markets
+</h2>
+
+
+<div class="market-grid">
+
+<button
+class="market-btn active"
+onclick="selectMarket('crypto','BTCUSDT','BTC/USD',this)">
+₿ BTC
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('crypto','ETHUSDT','ETH/USD',this)">
+Ξ ETH
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('crypto','SOLUSDT','SOL/USD',this)">
+◎ SOL
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('crypto','BNBUSDT','BNB/USD',this)">
+◆ BNB
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('crypto','XRPUSDT','XRP/USD',this)">
+◆ XRP
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('crypto','DOGEUSDT','DOGE/USD',this)">
+Ð DOGE
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('tradingview','OANDA:XAUUSD','XAU/USD',this)">
+🥇 GOLD
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('tradingview','OANDA:XAGUSD','XAG/USD',this)">
+🥈 SILVER
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('tradingview','OANDA:EURUSD','EUR/USD',this)">
+💱 EUR/USD
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('tradingview','OANDA:GBPUSD','GBP/USD',this)">
+💱 GBP/USD
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('tradingview','OANDA:USDJPY','USD/JPY',this)">
+💱 USD/JPY
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('tradingview','TVC:USOIL','WTI',this)">
+🛢️ WTI
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('tradingview','TVC:UKOIL','BRENT',this)">
+🛢️ BRENT
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('tradingview','OANDA:NAS100USD','NAS100',this)">
+📊 NAS100
+</button>
+
+<button
+class="market-btn"
+onclick="selectMarket('tradingview','OANDA:US30USD','US30',this)">
+📊 US30
+</button>
+
+</div>
+
+
+<div class="dashboard">
+
+<div class="card">
+<small>Paper Balance</small>
+<h2 id="balance">$10,000.00</h2>
+</div>
+
+<div class="card">
+<small>Market</small>
+<h2 id="marketName">BTC/USD</h2>
+</div>
+
+<div class="card">
+<small>Live Price</small>
+<h2 id="price">--</h2>
+</div>
+
+<div class="card">
+<small>Paper P/L</small>
+<h2 id="pnl">$0.00</h2>
+</div>
+
+<div class="card">
+<small>Signal</small>
+<h2 id="signal">WAIT</h2>
+</div>
+
+</div>
+
+
+<div class="chart-card">
+
+<div class="chart-header">
+
+<div
+class="symbol"
+id="chartSymbol">
+BTC/USD
+</div>
+
+<div
+class="live-dot"
+id="feedStatus">
+● BINANCE LIVE
+</div>
+
+</div>
+
+
+<div
+class="chart-area"
+id="chartArea">
+
+<canvas
+id="cryptoChart">
+</canvas>
+
+</div>
+
+</div>
+
+
+<h2 class="section-title">
+Risk & Paper Trading
+</h2>
+
+
+<div class="controls">
+
+<div class="card">
+
+<label>
+Starting Balance
+</label>
+
+<input
+id="balanceInput"
+type="number"
+value="10000"
+min="1">
+
+</div>
 
 
 <div class="card">
 
-<h2>📊 Live Markets</h2>
+<label>
+Risk Per Trade %
+</label>
 
-<p>
-Crypto, Forex, Metals, Energy
-and Indices.
-</p>
-
-<a
-class="button"
-href="chart.html">
-
-Open Live Charts
-
-</a>
+<input
+id="riskInput"
+type="number"
+value="1"
+min="0.1"
+max="5"
+step="0.1">
 
 </div>
 
 
 <div class="card">
 
-<h2>🧠 AI Analysis</h2>
+<label>
+Risk / Reward
+</label>
 
-<p>
-Trend, momentum, support,
-resistance and indicator analysis.
-</p>
+<select id="rrInput">
 
-<a
-class="button"
-href="chart.html">
+<option value="2">
+1 : 2
+</option>
 
-Open Analysis
+<option value="3">
+1 : 3
+</option>
 
-</a>
+<option value="4">
+1 : 4
+</option>
+
+</select>
+
+</div>
 
 </div>
 
 
-<div class="card">
+<div class="trade-buttons">
 
-<h2>🛡️ Risk Management</h2>
+<button
+class="trade-btn buy"
+onclick="paperTrade('BUY')">
+🟢 BUY — PAPER
+</button>
 
-<p>
-Position sizing, stop-loss
-and risk/reward calculations.
-</p>
-
-<a
-class="button"
-href="chart.html">
-
-Open Risk Panel
-
-</a>
+<button
+class="trade-btn sell"
+onclick="paperTrade('SELL')">
+🔴 SELL — PAPER
+</button>
 
 </div>
 
 
-<div class="card">
+<button
+class="reset"
+onclick="resetAccount()">
+Reset Paper Account
+</button>
 
-<h2>📈 Paper Trading</h2>
 
-<p>
-Test the strategy without
-placing real-money trades.
-</p>
+<section class="analysis">
 
-<a
-class="button"
-href="chart.html">
+<h2>
+🧠 Project X Analysis
+</h2>
 
-Open Paper Trading
+<div
+class="analysis-text"
+id="analysis">
 
-</a>
+Connecting to market data...
+
+</div>
+
+<div class="warning">
+
+⚠️ PAPER TRADING ONLY.
+No real-money orders are sent by this website.
 
 </div>
 
+</section>
 
-</div>
-
-
-<div class="status">
-
-<strong>System Status:</strong>
-
-&nbsp; Project X frontend active.
-
-<br><br>
-
-<strong>Trading Mode:</strong>
-
-&nbsp;
-
-<span class="mode">
-PAPER — No real-money orders
-</span>
-
-</div>
 
 </main>
+
+
+<script>
+
+/* =========================
+   PROJECT X STATE
+========================= */
+
+let selectedType = "crypto";
+
+let selectedSymbol = "BTCUSDT";
+
+let selectedName = "BTC/USD";
+
+let balance = 10000;
+
+let startingBalance = 10000;
+
+let lastPrice = 0;
+
+let position = null;
+
+let priceHistory = [];
+
+let socket = null;
+
+
+/* =========================
+   UI
+========================= */
+
+function updateUI(){
+
+    document.getElementById(
+        "balance"
+    ).textContent =
+        "$" + balance.toFixed(2);
+
+    document.getElementById(
+        "price"
+    ).textContent =
+        lastPrice
+        ? "$" + lastPrice.toFixed(2)
+        : "--";
+
+    document.getElementById(
+        "pnl"
+    ).textContent =
+        "$" +
+        (balance - startingBalance)
+        .toFixed(2);
+
+}
+
+
+/* =========================
+   BINANCE WEBSOCKET
+========================= */
+
+function connectBinance(symbol){
+
+    if(socket){
+
+        socket.close();
+
+        socket = null;
+
+    }
+
+    const stream =
+        symbol.toLowerCase()
+        + "@trade";
+
+    const url =
+        "wss://stream.binance.com:9443/ws/"
+        + stream;
+
+    socket =
+        new WebSocket(url);
+
+
+    socket.onopen =
+        function(){
+
+            document.getElementById(
+                "feedStatus"
+            ).textContent =
+                "● BINANCE LIVE";
+
+            document.getElementById(
+                "analysis"
+            ).textContent =
+                "Connected to Binance live market stream for "
+                + selectedName
+                + ".";
+
+        };
+
+
+    socket.onmessage =
+        function(event){
+
+            const data =
+                JSON.parse(event.data);
+
+            lastPrice =
+                Number(data.p);
+
+            priceHistory.push(
+                lastPrice
+            );
+
+            if(priceHistory.length > 120){
+
+                priceHistory.shift();
+
+            }
+
+            updateUI();
+
+            drawCryptoChart();
+
+            runBasicAnalysis();
+
+        };
+
+
+    socket.onerror =
+        function(){
+
+            document.getElementById(
+                "feedStatus"
+            ).textContent =
+                "● FEED ERROR";
+
+        };
+
+
+    socket.onclose =
+        function(){
+
+            if(
+                selectedType === "crypto"
+            ){
+
+                document.getElementById(
+                    "feedStatus"
+                ).textContent =
+                    "● RECONNECTING";
+
+                setTimeout(
+                    function(){
+
+                        if(
+                            selectedType ===
+                            "crypto"
+                        ){
+
+                            connectBinance(
+                                selectedSymbol
+                            );
+
+                        }
+
+                    },
+                    3000
+                );
+
+            }
+
+        };
+
+}
+
+
+/* =========================
+   CRYPTO CANVAS CHART
+========================= */
+
+function drawCryptoChart(){
+
+    const canvas =
+        document.getElementById(
+            "cryptoChart"
+        );
+
+    const area =
+        document.getElementById(
+            "chartArea"
+        );
+
+    canvas.width =
+        area.clientWidth;
+
+    canvas.height =
+        area.clientHeight;
+
+    const ctx =
+        canvas.getContext("2d");
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    if(priceHistory.length < 2){
+
+        return;
+
+    }
+
+
+    let min =
+        Math.min(
+            ...priceHistory
+        );
+
+    let max =
+        Math.max(
+            ...priceHistory
+        );
+
+    let range =
+        max - min;
+
+    if(range === 0){
+
+        range = 1;
+
+    }
+
+
+    ctx.beginPath();
+
+
+    priceHistory.forEach(
+        function(price,index){
+
+            const x =
+                index *
+                (
+                    canvas.width /
+                    (priceHistory.length - 1)
+                );
+
+            const y =
+                canvas.height -
+                (
+                    (price-min) /
+                    range
+                ) *
+                (canvas.height-30)
+                - 15;
+
+
+            if(index === 0){
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            }else{
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+
+            }
+
+        }
+    );
+
+
+    ctx.strokeStyle =
+        "#4da3ff";
+
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
+
+}
+
+
+/* =========================
+   TRADINGVIEW
+========================= */
+
+function loadTradingView(symbol){
+
+    const area =
+        document.getElementById(
+            "chartArea"
+        );
+
+    area.innerHTML = "";
+
+
+    const container =
+        document.createElement(
+            "div"
+        );
+
+    container.className =
+        "tradingview-container";
+
+
+    const widget =
+        document.createElement(
+            "div"
+        );
+
+    widget.style.height =
+        "100%";
+
+    widget.style.width =
+        "100%";
+
+
+    container.appendChild(
+        widget
+    );
+
+    area.appendChild(
+        container
+    );
+
+
+    const script =
+        document.createElement(
+            "script"
+        );
+
+    script.src =
+        "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+
+    script.async = true;
+
+
+    script.innerHTML =
+        JSON.stringify({
+
+            autosize:true,
+
+            symbol:symbol,
+
+            interval:"15",
+
+            timezone:"Etc/UTC",
+
+            theme:"dark",
+
+            style:"1",
+
+            locale:"en",
+
+            allow_symbol_change:true,
+
+            hide_top_toolbar:false,
+
+            hide_legend:false,
+
+            save_image:false,
+
+            calendar:false,
+
+            support_host:
+                "https://www.tradingview.com"
+
+        });
+
+
+    container.appendChild(
+        script
+    );
+
+}
+
+
+/* =========================
+   MARKET SELECTION
+========================= */
+
+function selectMarket(
+    type,
+    symbol,
+    name,
+    button
+){
+
+    document
+        .querySelectorAll(
+            ".market-btn"
+        )
+        .forEach(
+            function(btn){
+
+                btn.classList
+                    .remove("active");
+
+            }
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    selectedType =
+        type;
+
+    selectedSymbol =
+        symbol;
+
+    selectedName =
+        name;
+
+
+    document.getElementById(
+        "marketName"
+    ).textContent =
+        name;
+
+
+    document.getElementById(
+        "chartSymbol"
+    ).textContent =
+        name;
+
+
+    document.getElementById(
+        "signal"
+    ).textContent =
+        "WAIT";
+
+
+    if(socket){
+
+        socket.close();
+
+        socket = null;
+
+    }
+
+
+    priceHistory = [];
+
+    lastPrice = 0;
+
+    updateUI();
+
+
+    if(type === "crypto"){
+
+        document.getElementById(
+            "feedStatus"
+        ).textContent =
+            "● CONNECTING";
+
+        connectBinance(
+            symbol
+        );
+
+
+        const area =
+            document.getElementById(
+                "chartArea"
+            );
+
+        area.innerHTML =
+            '<canvas id="cryptoChart"></canvas>';
+
+
+        document.getElementById(
+            "analysis"
+        ).textContent =
+            "Connecting to Binance live data for "
+            + name
+            + "...";
+
+    }
+
+    else{
+
+        document.getElementById(
+            "feedStatus"
+        ).textContent =
+            "● TRADINGVIEW";
+
+        loadTradingView(
+            symbol
+        );
+
+
+        document.getElementById(
+            "analysis"
+        ).textContent =
+            "TradingView chart loaded for "
+            + name
+            + ". Project X analysis engine will use a separate market-data feed.";
+
+    }
+
+}
+
+
+/* =========================
+   BASIC ANALYSIS
+========================= */
+
+function runBasicAnalysis(){
+
+    if(priceHistory.length < 10){
+
+        return;
+
+    }
+
+
+    const recent =
+        priceHistory[
+            priceHistory.length - 1
+        ];
+
+    const previous =
+        priceHistory[
+            priceHistory.length - 10
+        ];
+
+
+    let trend =
+        "SIDEWAYS";
+
+    if(recent > previous){
+
+        trend =
+            "BULLISH";
+
+    }
+
+    if(recent < previous){
+
+        trend =
+            "BEARISH";
+
+    }
+
+
+    let signal =
+        "WAIT";
+
+
+    const change =
+        (
+            (recent-previous)
+            /
+            previous
+        ) * 100;
+
+
+    if(change > 0.15){
+
+        signal =
+            "BUY";
+
+    }
+
+    else if(change < -0.15){
+
+        signal =
+            "SELL";
+
+    }
+
+
+    document.getElementById(
+        "signal"
+    ).textContent =
+        signal;
+
+
+    document.getElementById(
+        "analysis"
+    ).textContent =
+        "Trend: "
+        + trend
+        + " | Short-term movement: "
+        + change.toFixed(3)
+        + "% | Signal: "
+        + signal
+        + ". This is a basic paper-trading demonstration, not a guaranteed trading strategy.";
+
+}
+
+
+/* =========================
+   PAPER TRADE
+========================= */
+
+function paperTrade(side){
+
+    if(!lastPrice){
+
+        alert(
+            "Live price available nahi hai."
+        );
+
+        return;
+
+    }
+
+
+    const riskPercent =
+        Number(
+            document.getElementById(
+                "riskInput"
+            ).value
+        );
+
+
+    const rr =
+        Number(
+            document.getElementById(
+                "rrInput"
+            ).value
+        );
+
+
+    const riskAmount =
+        balance *
+        (
+            riskPercent /
+            100
+        );
+
+
+    position = {
+
+        side:side,
+
+        entry:lastPrice,
+
+        risk:riskAmount,
+
+        rr:rr
+
+    };
+
+
+    document.getElementById(
+        "signal"
+    ).textContent =
+        side;
+
+
+    document.getElementById(
+        "analysis"
+    ).textContent =
+        side
+        + " PAPER position opened at "
+        + lastPrice.toFixed(2)
+        + ". Risk amount: $"
+        + riskAmount.toFixed(2)
+        + ". Risk/Reward: 1:"
+        + rr
+        + ".";
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetAccount(){
+
+    balance =
+        Number(
+            document.getElementById(
+                "balanceInput"
+            ).value
+        );
+
+
+    startingBalance =
+        balance;
+
+
+    position =
+        null;
+
+
+    document.getElementById(
+        "signal"
+    ).textContent =
+        "WAIT";
+
+
+    document.getElementById(
+        "analysis"
+    ).textContent =
+        "Paper account reset successfully.";
+
+    updateUI();
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+window.addEventListener(
+    "resize",
+    function(){
+
+        if(
+            selectedType ===
+            "crypto"
+        ){
+
+            drawCryptoChart();
+
+        }
+
+    }
+);
+
+
+updateUI();
+
+connectBinance(
+    "BTCUSDT"
+);
+
+</script>
+
 
 </body>
 </html>
