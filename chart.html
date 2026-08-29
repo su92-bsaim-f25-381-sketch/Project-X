@@ -88,21 +88,18 @@ body {
 }
 
 .chart {
-    height: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: #8995a8;
-    padding: 20px;
+    height: 520px;
+    width: 100%;
 }
 
-.chart-message {
-    max-width: 500px;
+.tradingview-widget-container {
+    height: 100%;
+    width: 100%;
 }
 
-.chart-message h2 {
-    color: #ffffff;
+.tradingview-widget-container__widget {
+    height: 100%;
+    width: 100%;
 }
 
 .info-grid {
@@ -154,18 +151,12 @@ body {
 }
 
 @media (max-width: 600px) {
-
     .container {
         padding: 12px;
     }
 
     .chart {
-        height: 400px;
-    }
-
-    .chart-header {
-        align-items: flex-start;
-        gap: 10px;
+        height: 430px;
     }
 }
 </style>
@@ -174,287 +165,250 @@ body {
 <body>
 
 <header class="header">
-
     <h1>PROJECT X</h1>
-
-    <p>
-        Professional Multi-Market Analysis Dashboard
-    </p>
-
+    <p>Professional Multi-Market Analysis Dashboard</p>
 </header>
-
 
 <main class="container">
 
-    <!-- MARKET SELECTOR -->
-
-    <div class="market-grid">
-
-        <button
-            class="market-btn active"
-            onclick="selectMarket('BTC/USD', 'Crypto', this)">
-            ₿ BTC/USD
-        </button>
-
-        <button
-            class="market-btn"
-            onclick="selectMarket('ETH/USD', 'Crypto', this)">
-            Ξ ETH/USD
-        </button>
-
-        <button
-            class="market-btn"
-            onclick="selectMarket('SOL/USD', 'Crypto', this)">
-            ◎ SOL/USD
-        </button>
-
-        <button
-            class="market-btn"
-            onclick="selectMarket('XAU/USD', 'Metals', this)">
-            🥇 XAU/USD
-        </button>
-
-        <button
-            class="market-btn"
-            onclick="selectMarket('XAG/USD', 'Metals', this)">
-            🥈 XAG/USD
-        </button>
-
-        <button
-            class="market-btn"
-            onclick="selectMarket('EUR/USD', 'Forex', this)">
-            💱 EUR/USD
-        </button>
-
-        <button
-            class="market-btn"
-            onclick="selectMarket('GBP/USD', 'Forex', this)">
-            💱 GBP/USD
-        </button>
-
-        <button
-            class="market-btn"
-            onclick="selectMarket('USD/JPY', 'Forex', this)">
-            💱 USD/JPY
-        </button>
+<div class="market-grid">
 
-        <button
-            class="market-btn"
-            onclick="selectMarket('USD/CHF', 'Forex', this)">
-            💱 USD/CHF
-        </button>
+<button class="market-btn active"
+onclick="selectMarket('BINANCE:BTCUSDT','BTC/USD','Crypto',this)">
+₿ BTC
+</button>
 
-        <button
-            class="market-btn"
-            onclick="selectMarket('AUD/USD', 'Forex', this)">
-            💱 AUD/USD
-        </button>
+<button class="market-btn"
+onclick="selectMarket('BINANCE:ETHUSDT','ETH/USD','Crypto',this)">
+Ξ ETH
+</button>
 
-        <button
-            class="market-btn"
-            onclick="selectMarket('WTI', 'Energy', this)">
-            🛢️ WTI
-        </button>
+<button class="market-btn"
+onclick="selectMarket('BINANCE:SOLUSDT','SOL/USD','Crypto',this)">
+◎ SOL
+</button>
 
-        <button
-            class="market-btn"
-            onclick="selectMarket('BRENT', 'Energy', this)">
-            🛢️ Brent
-        </button>
+<button class="market-btn"
+onclick="selectMarket('OANDA:XAUUSD','XAU/USD','Metals',this)">
+🥇 Gold
+</button>
 
-        <button
-            class="market-btn"
-            onclick="selectMarket('NATURAL GAS', 'Energy', this)">
-            🔥 Natural Gas
-        </button>
+<button class="market-btn"
+onclick="selectMarket('OANDA:XAGUSD','XAG/USD','Metals',this)">
+🥈 Silver
+</button>
 
-        <button
-            class="market-btn"
-            onclick="selectMarket('NAS100', 'Index', this)">
-            📊 NAS100
-        </button>
+<button class="market-btn"
+onclick="selectMarket('OANDA:EURUSD','EUR/USD','Forex',this)">
+💱 EUR/USD
+</button>
 
-        <button
-            class="market-btn"
-            onclick="selectMarket('US30', 'Index', this)">
-            📊 US30
-        </button>
+<button class="market-btn"
+onclick="selectMarket('OANDA:GBPUSD','GBP/USD','Forex',this)">
+💱 GBP/USD
+</button>
 
-        <button
-            class="market-btn"
-            onclick="selectMarket('SPX500', 'Index', this)">
-            📊 SPX500
-        </button>
+<button class="market-btn"
+onclick="selectMarket('OANDA:USDJPY','USD/JPY','Forex',this)">
+💱 USD/JPY
+</button>
 
-    </div>
+<button class="market-btn"
+onclick="selectMarket('TVC:USOIL','WTI','Energy',this)">
+🛢️ WTI
+</button>
 
+<button class="market-btn"
+onclick="selectMarket('TVC:UKOIL','BRENT','Energy',this)">
+🛢️ Brent
+</button>
 
-    <!-- CHART -->
+<button class="market-btn"
+onclick="selectMarket('OANDA:NAS100USD','NAS100','Index',this)">
+📊 NAS100
+</button>
 
-    <section class="chart-card">
+<button class="market-btn"
+onclick="selectMarket('OANDA:US30USD','US30','Index',this)">
+📊 US30
+</button>
 
-        <div class="chart-header">
+</div>
 
-            <div
-                class="symbol"
-                id="symbol">
-                BTC/USD
-            </div>
 
-            <div class="live">
-                ● LIVE DATA
-            </div>
+<section class="chart-card">
 
-        </div>
+<div class="chart-header">
 
+<div class="symbol" id="symbol">
+BTC/USD
+</div>
 
-        <div class="chart">
+<div class="live">
+● LIVE CHART
+</div>
 
-            <div class="chart-message">
+</div>
 
-                <h2 id="chartTitle">
-                    BTC/USD
-                </h2>
 
-                <p>
-                    Live market chart will appear here
-                    after the market-data feed is connected.
-                </p>
+<div class="chart">
 
-                <p>
-                    No artificial prices are displayed.
-                </p>
+<div
+class="tradingview-widget-container"
+id="tradingview_chart">
 
-            </div>
+<div
+class="tradingview-widget-container__widget">
+</div>
 
-        </div>
+</div>
 
-    </section>
+</div>
 
+</section>
 
-    <!-- MARKET INFORMATION -->
 
-    <div class="info-grid">
+<div class="info-grid">
 
-        <div class="card">
+<div class="card">
+<small>Asset Class</small>
+<h3 id="asset">Crypto</h3>
+</div>
 
-            <small>
-                Asset Class
-            </small>
+<div class="card">
+<small>Selected Market</small>
+<h3 id="selected">BTC/USD</h3>
+</div>
 
-            <h3 id="asset">
-                Crypto
-            </h3>
+<div class="card">
+<small>Chart Status</small>
+<h3 id="status">Loading</h3>
+</div>
 
-        </div>
+<div class="card">
+<small>Strategy</small>
+<h3>Risk Managed</h3>
+</div>
 
+<div class="card">
+<small>Risk/Reward</small>
+<h3>1 : 2+</h3>
+</div>
 
-        <div class="card">
+<div class="card">
+<small>Mode</small>
+<h3>PAPER</h3>
+</div>
 
-            <small>
-                Price
-            </small>
+</div>
 
-            <h3 id="price">
-                Waiting for feed
-            </h3>
 
-        </div>
+<section class="analysis">
 
+<h2>🧠 Project X Analysis</h2>
 
-        <div class="card">
+<div class="status" id="analysis">
 
-            <small>
-                Trend
-            </small>
+Live chart selected.
 
-            <h3 id="trend">
-                Waiting
-            </h3>
+Project X will analyze market data after
+the analysis engine is connected.
 
-        </div>
+</div>
 
+<div class="warning">
 
-        <div class="card">
+⚠️ Paper Trading Mode — this dashboard does
+not place real-money orders.
 
-            <small>
-                Support
-            </small>
+</div>
 
-            <h3 id="support">
-                Waiting
-            </h3>
-
-        </div>
-
-
-        <div class="card">
-
-            <small>
-                Resistance
-            </small>
-
-            <h3 id="resistance">
-                Waiting
-            </h3>
-
-        </div>
-
-
-        <div class="card">
-
-            <small>
-                Signal
-            </small>
-
-            <h3 id="signal">
-                WAIT
-            </h3>
-
-        </div>
-
-    </div>
-
-
-    <!-- AI ANALYSIS -->
-
-    <section class="analysis">
-
-        <h2>
-            🧠 Project X Market Analysis
-        </h2>
-
-        <div
-            class="status"
-            id="analysis">
-
-            Waiting for market data...
-
-            Once the live feed is connected,
-            Project X will evaluate trend,
-            support/resistance, momentum,
-            indicators and risk conditions
-            before generating a paper-trading signal.
-
-        </div>
-
-
-        <div class="warning">
-
-            ⚠️ Paper Trading Mode —
-            no real-money order is being placed
-            by this page.
-
-        </div>
-
-    </section>
+</section>
 
 </main>
 
 
 <script>
 
-function selectMarket(symbol, assetClass, button) {
+let currentSymbol = "BINANCE:BTCUSDT";
+
+
+function loadTradingViewChart(symbol) {
+
+    const container =
+        document.getElementById("tradingview_chart");
+
+    container.innerHTML = "";
+
+    const widget =
+        document.createElement("div");
+
+    widget.className =
+        "tradingview-widget-container__widget";
+
+    widget.style.height = "100%";
+    widget.style.width = "100%";
+
+    container.appendChild(widget);
+
+
+    const script =
+        document.createElement("script");
+
+    script.type = "text/javascript";
+
+    script.src =
+        "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+
+    script.async = true;
+
+
+    script.innerHTML = JSON.stringify({
+
+        autosize: true,
+
+        symbol: symbol,
+
+        interval: "15",
+
+        timezone: "Etc/UTC",
+
+        theme: "dark",
+
+        style: "1",
+
+        locale: "en",
+
+        allow_symbol_change: false,
+
+        hide_top_toolbar: false,
+
+        hide_legend: false,
+
+        save_image: false,
+
+        calendar: false,
+
+        support_host:
+            "https://www.tradingview.com"
+
+    });
+
+
+    container.appendChild(script);
+
+    document.getElementById("status")
+        .textContent = "Live";
+
+}
+
+
+function selectMarket(
+    tvSymbol,
+    displaySymbol,
+    assetClass,
+    button
+) {
 
     document
         .querySelectorAll(".market-btn")
@@ -468,49 +422,47 @@ function selectMarket(symbol, assetClass, button) {
     button.classList.add("active");
 
 
-    document.getElementById("symbol").textContent =
-        symbol;
+    currentSymbol = tvSymbol;
 
 
-    document.getElementById("chartTitle").textContent =
-        symbol;
+    document.getElementById("symbol")
+        .textContent = displaySymbol;
 
 
-    document.getElementById("asset").textContent =
-        assetClass;
+    document.getElementById("selected")
+        .textContent = displaySymbol;
 
 
-    document.getElementById("price").textContent =
-        "Waiting for feed";
+    document.getElementById("asset")
+        .textContent = assetClass;
 
 
-    document.getElementById("trend").textContent =
-        "Waiting";
+    document.getElementById("status")
+        .textContent = "Loading";
 
 
-    document.getElementById("support").textContent =
-        "Waiting";
+    document.getElementById("analysis")
+        .textContent =
+        "Project X is preparing analysis for "
+        + displaySymbol
+        + ". Analysis signals will only be generated after the market-data and strategy engine is connected.";
 
 
-    document.getElementById("resistance").textContent =
-        "Waiting";
-
-
-    document.getElementById("signal").textContent =
-        "WAIT";
-
-
-    document.getElementById("analysis").textContent =
-        "Waiting for live market data for "
-        + symbol
-        + "...";
+    loadTradingViewChart(tvSymbol);
 
 }
 
+
+window.addEventListener(
+    "load",
+    function() {
+
+        loadTradingViewChart(currentSymbol);
+
+    }
+);
+
 </script>
-
-
-<script src="market-data.js"></script>
 
 </body>
 </html>
