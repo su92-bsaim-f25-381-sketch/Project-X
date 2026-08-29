@@ -3,35 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project X - Trading Bot Interface</title>
+    <title>Project X - Multi-Section Auto Trading Engine</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
         body { background-color: #0b0f19; color: #f1f5f9; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1250px; margin: 0 auto; }
         h1 { text-align: center; color: #38bdf8; letter-spacing: 1px; margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .card h3 { margin-top: 0; color: #94a3b8; font-size: 1.05rem; }
         .metric-title { font-size: 0.85rem; color: #64748b; margin-top: 5px; display: block; }
-        .metric-value { font-size: 1.7rem; font-weight: bold; color: #38bdf8; margin-top: 5px; }
         
-        .thinking-box { background: #0f172a; border-left: 4px solid #38bdf8; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
-        .thinking-status { font-weight: bold; color: #f59e0b; display: flex; align-items: center; gap: 8px; }
-        .pulse { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; animation: blink 1.2s infinite; }
-        @keyframes blink { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
-
-        input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; margin-top: 5px; font-size: 0.95rem; }
+        input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; margin-top: 5px; }
         .btn { border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 10px; transition: 0.2s; }
-        .btn-start { background-color: #22c55e; color: #fff; }
-        .btn-start:hover { background-color: #16a34a; }
-        .btn-stop { background-color: #ef4444; color: #fff; }
-        .btn-stop:hover { background-color: #dc2626; }
-        .btn-update { background-color: #0ea5e9; color: #fff; }
         .btn-login { background-color: #8b5cf6; color: #fff; }
         .btn-login:hover { background-color: #7c3aed; }
+        
+        .section-box { background: #0f172a; border-left: 4px solid #38bdf8; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .section-box.sec2 { border-left-color: #a855f7; }
+        .section-box.sec3 { border-left-color: #f59e0b; }
+        .section-title { font-weight: bold; font-size: 1rem; color: #f8fafc; display: flex; justify-content: space-between; }
+        .section-status { margin-top: 8px; font-size: 0.9rem; color: #cbd5e1; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; font-size: 0.9rem; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #334155; font-size: 0.88rem; }
         th { background-color: #0f172a; color: #94a3b8; }
         .status-win { color: #4ade80; font-weight: bold; }
         .status-loss { color: #f87171; font-weight: bold; }
@@ -42,182 +37,142 @@
 </head>
 <body>
     <div class="container">
-        <h1>🤖 Project X - Auto Trading Bot Dashboard</h1>
+        <h1>🤖 Project X - Multi-Section Auto Trading Engine</h1>
 
-        <!-- Controls Grid -->
+        <!-- Top Account Control & Status -->
         <div class="grid">
-            <!-- Exness Login Card -->
             <div class="card">
-                <h3>🔑 Exness MT5 Login</h3>
-                <label class="metric-title">Account Login ID</label>
-                <input type="number" id="exnessLogin" placeholder="e.g. 12345678">
+                <h3>🔑 Exness Account Login</h3>
+                <label class="metric-title">Email / Account ID</label>
+                <input type="text" id="exnessEmail" placeholder="Email or MT5 ID">
                 <label class="metric-title">Password</label>
-                <input type="password" id="exnessPassword" placeholder="MT5 Password">
-                <label class="metric-title">Server</label>
-                <input type="text" id="exnessServer" placeholder="e.g. Exness-MT5Real9">
-                <button class="btn btn-login" onclick="loginExness()">Connect Account</button>
+                <input type="password" id="exnessPassword" placeholder="Password">
+                <button class="btn btn-login" onclick="loginExness()">Login & Auto-Start All Sections</button>
             </div>
 
-            <!-- Risk Control -->
             <div class="card">
-                <h3>🛡️ Risk Control</h3>
-                <label class="metric-title">Risk Per Trade (%)</label>
-                <input type="number" id="riskInput" value="2.0" step="0.5">
-                <button class="btn btn-update" onclick="updateRisk()">Update Risk</button>
-            </div>
-
-            <!-- SL & TP Settings -->
-            <div class="card">
-                <h3>🎯 SL & TP Settings</h3>
-                <label class="metric-title">Stop Loss (Pips)</label>
-                <input type="number" id="slInput" value="20" min="5">
-                <label class="metric-title">Take Profit (Pips)</label>
-                <input type="number" id="tpInput" value="40" min="5">
-                <button class="btn btn-update" onclick="updateSLTP()">Update SL/TP</button>
-            </div>
-
-            <!-- Bot Power Control -->
-            <div class="card">
-                <h3>⚡ Bot Power Control</h3>
-                <p>Status: <span id="statusBadge" class="badge badge-paused">PAUSED</span></p>
-                <button id="toggleBtn" class="btn btn-start" onclick="toggleBot()">🟢 START BOT</button>
+                <h3>📊 Account Overview</h3>
+                <p>Status: <span id="statusBadge" class="badge badge-paused">DISCONNECTED</span></p>
+                <p>Live Balance: <b id="dispBalance" style="color:#38bdf8; font-size:1.4rem;">$0.00</b></p>
+                <p>Logged Account: <b id="dispUser">-</b></p>
             </div>
         </div>
 
-        <!-- Bot Thinking Box -->
-        <div class="thinking-box">
-            <div class="thinking-status">
-                <span class="pulse"></span> 🧠 Bot Strategy Radar (EMA 9/21 + RSI):
+        <!-- 3 Active Strategy Sections Grid -->
+        <h2 style="color: #94a3b8; font-size: 1.2rem; margin-top: 20px;">⚡ Active Strategy Execution Sections</h2>
+        
+        <div class="section-box">
+            <div class="section-title">
+                <span>📈 Section 1: EMA Trend Strategy (Risk: 2%)</span>
+                <span id="sec1Stats">Trades: 0 | Wins: 0</span>
             </div>
-            <div id="thinkingMsg" style="margin-top: 6px; color: #cbd5e1;">Bot is currently paused...</div>
+            <div class="section-status" id="sec1Status">Waiting for Exness Login...</div>
         </div>
 
-        <!-- Metrics Cards -->
-        <div class="grid">
-            <div class="card"><div class="metric-title">Live Balance</div><div class="metric-value" id="dispBalance">$1000.00</div></div>
-            <div class="card"><div class="metric-title">Total Trades</div><div class="metric-value" id="dispTotal">0</div></div>
-            <div class="card"><div class="metric-title">Wins 🟢</div><div class="metric-value" id="dispWins">0</div></div>
-            <div class="card"><div class="metric-title">Losses 🔴</div><div class="metric-value" id="dispLosses">0</div></div>
-            <div class="card"><div class="metric-title">Win Rate</div><div class="metric-value" id="dispWinRate">0.00%</div></div>
+        <div class="section-box sec2">
+            <div class="section-title">
+                <span>🎯 Section 2: RSI Scalping Strategy (Risk: 1.5%)</span>
+                <span id="sec2Stats">Trades: 0 | Wins: 0</span>
+            </div>
+            <div class="section-status" id="sec2Status">Waiting for Exness Login...</div>
         </div>
 
-        <!-- History Table -->
+        <div class="section-box sec3">
+            <div class="section-title">
+                <span>🚀 Section 3: Volatility Breakout Strategy (Risk: 1%)</span>
+                <span id="sec3Stats">Trades: 0 | Wins: 0</span>
+            </div>
+            <div class="section-status" id="sec3Status">Waiting for Exness Login...</div>
+        </div>
+
+        <!-- Live Trade Logs Table -->
         <div class="card">
-            <h3>📜 Trade History Logs</h3>
+            <h3>📜 Multi-Section Trade Execution Logs</h3>
             <table>
                 <thead>
                     <tr>
+                        <th>Time</th>
+                        <th>Section</th>
                         <th>Type</th>
                         <th>Lot Size</th>
-                        <th>SL / TP (Pips)</th>
                         <th>PnL ($)</th>
-                        <th>Status</th>
-                        <th>Balance</th>
+                        <th>Result</th>
                     </tr>
                 </thead>
-                <tbody id="historyBody">
-                    <tr><td colspan="6" style="text-align:center;">No active trades placed yet.</td></tr>
+                <tbody id="logsBody">
+                    <tr><td colspan="6" style="text-align:center;">Login to start auto-trading across all sections.</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        async function fetchStatus() {
-            const res = await fetch('/api/status');
-            const data = await res.json();
-            
-            document.getElementById('dispBalance').innerText = '$' + data.balance.toFixed(2);
-            document.getElementById('dispTotal').innerText = data.total_trades;
-            document.getElementById('dispWins').innerText = data.wins;
-            document.getElementById('dispLosses').innerText = data.losses;
-            document.getElementById('dispWinRate').innerText = data.win_rate + '%';
-            
-            const badge = document.getElementById('statusBadge');
-            const btn = document.getElementById('toggleBtn');
-            if(data.is_active) {
-                badge.className = 'badge badge-active';
-                badge.innerText = 'RUNNING';
-                btn.className = 'btn btn-stop';
-                btn.innerText = '🔴 STOP BOT';
-            } else {
-                badge.className = 'badge badge-paused';
-                badge.innerText = 'PAUSED';
-                btn.className = 'btn btn-start';
-                btn.innerText = '🟢 START BOT';
-            }
-
-            const historyBody = document.getElementById('historyBody');
-            if(data.trade_history.length > 0) {
-                historyBody.innerHTML = data.trade_history.map(t => `
-                    <tr>
-                        <td><b>${t.type}</b></td>
-                        <td>${t.lot_size}</td>
-                        <td>${t.sl} / ${t.tp}</td>
-                        <td class="${t.result === 'WIN' ? 'status-win' : 'status-loss'}">${t.pnl > 0 ? '+' : ''}${t.pnl}</td>
-                        <td class="${t.result === 'WIN' ? 'status-win' : 'status-loss'}">${t.result}</td>
-                        <td>$${t.balance}</td>
-                    </tr>
-                `).join('');
-            }
-        }
-
         async function loginExness() {
-            const login = document.getElementById('exnessLogin').value;
+            const email = document.getElementById('exnessEmail').value;
             const password = document.getElementById('exnessPassword').value;
-            const server = document.getElementById('exnessServer').value;
 
-            const res = await fetch('/api/login_exness', {
+            if (!email || !password) {
+                alert("⚠️ Please fill Email and Password!");
+                return;
+            }
+
+            const res = await fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ login, password, server })
+                body: JSON.stringify({ email, password })
             });
             const data = await res.json();
             alert(data.message);
-            fetchStatus();
+            updateDashboard();
         }
 
-        async function toggleBot() {
-            await fetch('/api/toggle', { method: 'POST' });
-            fetchStatus();
-        }
+        async function updateDashboard() {
+            const res = await fetch('/api/status');
+            const data = await res.json();
 
-        async function updateRisk() {
-            const risk_percentage = document.getElementById('riskInput').value;
-            await fetch('/api/update_risk', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ risk_percentage })
-            });
-            fetchStatus();
-        }
+            document.getElementById('dispBalance').innerText = '$' + data.balance.toFixed(2);
+            document.getElementById('dispUser').innerText = data.user_email || 'Connected';
+            
+            const badge = document.getElementById('statusBadge');
+            if(data.is_active) {
+                badge.className = 'badge badge-active';
+                badge.innerText = 'AUTO-TRADING ACTIVE';
+            }
 
-        async function updateSLTP() {
-            const sl = document.getElementById('slInput').value;
-            const tp = document.getElementById('tpInput').value;
-            await fetch('/api/update_sltp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ stop_loss: sl, take_profit: tp })
-            });
-            alert('SL and TP Pips Updated Successfully!');
-            fetchStatus();
+            // Update Sections Status
+            document.getElementById('sec1Status').innerText = data.sections.section_1.status;
+            document.getElementById('sec1Stats').innerText = `Trades: ${data.sections.section_1.total_trades} | Wins: ${data.sections.section_1.wins}`;
+
+            document.getElementById('sec2Status').innerText = data.sections.section_2.status;
+            document.getElementById('sec2Stats').innerText = `Trades: ${data.sections.section_2.total_trades} | Wins: ${data.sections.section_2.wins}`;
+
+            document.getElementById('sec3Status').innerText = data.sections.section_3.status;
+            document.getElementById('sec3Stats').innerText = `Trades: ${data.sections.section_3.total_trades} | Wins: ${data.sections.section_3.wins}`;
+
+            // Logs Table
+            const logsBody = document.getElementById('logsBody');
+            if(data.trade_logs.length > 0) {
+                logsBody.innerHTML = data.trade_logs.map(log => `
+                    <tr>
+                        <td>${log.time}</td>
+                        <td><b>${log.section}</b></td>
+                        <td>${log.type}</td>
+                        <td>${log.lot}</td>
+                        <td class="${log.result === 'WIN' ? 'status-win' : 'status-loss'}">${log.pnl > 0 ? '+' : ''}${log.pnl}</td>
+                        <td class="${log.result === 'WIN' ? 'status-win' : 'status-loss'}">${log.result}</td>
+                    </tr>
+                `).join('');
+            }
         }
 
         setInterval(async () => {
             const res = await fetch('/api/status');
             const data = await res.json();
             if(data.is_active) {
-                const tickRes = await fetch('/api/tick', { method: 'POST' });
-                const tickData = await tickRes.json();
-                if(tickData.thinking) {
-                    document.getElementById('thinkingMsg').innerText = tickData.thinking;
-                }
-                fetchStatus();
+                await fetch('/api/process_sections', { method: 'POST' });
+                updateDashboard();
             }
         }, 3000);
-
-        fetchStatus();
     </script>
 </body>
 </html>
