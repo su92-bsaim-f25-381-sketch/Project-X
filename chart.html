@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Project X — Live Markets</title>
+<title>Project X | Live Markets</title>
 
 <style>
 *{
@@ -19,76 +19,106 @@ body{
 }
 
 .header{
-    padding:20px;
+    padding:18px 22px;
     background:#0d121b;
     border-bottom:1px solid #202938;
 }
 
 .header h1{
     margin:0;
+    font-size:25px;
 }
 
 .header p{
-    color:#8d99aa;
+    margin:6px 0 0;
+    color:#8995a8;
 }
 
-.market-buttons{
+.container{
+    padding:20px;
+}
+
+.market-grid{
     display:grid;
     grid-template-columns:
     repeat(auto-fit,minmax(130px,1fr));
     gap:10px;
-    padding:20px;
+    margin-bottom:18px;
 }
 
-.market-buttons button{
-    padding:14px;
+.market-btn{
+    padding:14px 10px;
     border:1px solid #263246;
     border-radius:10px;
     background:#111824;
     color:#fff;
     cursor:pointer;
+    font-weight:bold;
 }
 
-.market-buttons button:hover,
-.market-buttons button.active{
-    background:#1c2c42;
+.market-btn:hover,
+.market-btn.active{
+    background:#1b3049;
+    border-color:#3a5878;
 }
 
-.chart-box{
-    margin:0 20px 20px;
-    height:480px;
+.chart-card{
     background:#0d121b;
     border:1px solid #202938;
     border-radius:15px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    overflow:hidden;
 }
 
-.chart-placeholder{
-    text-align:center;
-    color:#8995a8;
+.chart-header{
+    padding:16px;
+    border-bottom:1px solid #202938;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
 .symbol{
-    font-size:28px;
-    color:#fff;
-    margin-bottom:10px;
+    font-size:22px;
+    font-weight:bold;
 }
 
-.info{
+.live{
+    color:#00e676;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.chart{
+    height:500px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:#8995a8;
+    padding:20px;
+}
+
+.chart-message{
+    max-width:500px;
+}
+
+.chart-message h2{
+    color:#fff;
+}
+
+.info-grid{
     display:grid;
     grid-template-columns:
-    repeat(auto-fit,minmax(180px,1fr));
+    repeat(auto-fit,minmax(160px,1fr));
     gap:12px;
-    padding:0 20px 20px;
+    margin-top:18px;
 }
 
 .card{
     background:#111824;
     border:1px solid #202938;
     border-radius:12px;
-    padding:18px;
+    padding:17px;
 }
 
 .card small{
@@ -96,7 +126,49 @@ body{
 }
 
 .card h3{
-    margin-top:8px;
+    margin:8px 0 0;
+}
+
+.analysis{
+    margin-top:18px;
+    background:#111824;
+    border:1px solid #202938;
+    border-radius:15px;
+    padding:20px;
+}
+
+.analysis h2{
+    margin-top:0;
+}
+
+.status{
+    color:#8995a8;
+    line-height:1.6;
+}
+
+.warning{
+    margin-top:15px;
+    padding:12px;
+    border-radius:9px;
+    background:#17120a;
+    color:#e6c77a;
+    font-size:13px;
+}
+
+@media(max-width:600px){
+
+    .container{
+        padding:12px;
+    }
+
+    .chart{
+        height:400px;
+    }
+
+    .chart-header{
+        align-items:flex-start;
+        gap:10px;
+    }
 }
 </style>
 </head>
@@ -105,101 +177,230 @@ body{
 
 <header class="header">
 
-<h1>Project X</h1>
+<h1>PROJECT X</h1>
 
-<p>Live Market Analysis</p>
+<p>Professional Multi-Market Analysis Dashboard</p>
 
 </header>
 
 
-<div class="market-buttons">
+<main class="container">
 
-<button class="active"
-onclick="selectMarket('XAU/USD', this)">
-🟠 Gold
+<!-- MARKET SELECTOR -->
+
+<div class="market-grid">
+
+<button class="market-btn active"
+onclick="selectMarket('BTC/USD','Crypto',this)">
+₿ BTC/USD
 </button>
 
-<button
-onclick="selectMarket('XAG/USD', this)">
-⚪ Silver
+<button class="market-btn"
+onclick="selectMarket('ETH/USD','Crypto',this)">
+Ξ ETH/USD
 </button>
 
-<button
-onclick="selectMarket('WTI', this)">
-🛢️ Crude Oil
+<button class="market-btn"
+onclick="selectMarket('SOL/USD','Crypto',this)">
+◎ SOL/USD
 </button>
 
-<button
-onclick="selectMarket('EUR/USD', this)">
+<button class="market-btn"
+onclick="selectMarket('XAU/USD','Metals',this)">
+🥇 XAU/USD
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('XAG/USD','Metals',this)">
+🥈 XAG/USD
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('EUR/USD','Forex',this)">
 💱 EUR/USD
 </button>
 
-<button
-onclick="selectMarket('BTC/USD', this)">
-₿ Bitcoin
+<button class="market-btn"
+onclick="selectMarket('GBP/USD','Forex',this)">
+💱 GBP/USD
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('USD/JPY','Forex',this)">
+💱 USD/JPY
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('WTI','Energy',this)">
+🛢️ WTI
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('BRENT','Energy',this)">
+🛢️ Brent
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('NAS100','Index',this)">
+📊 NAS100
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('US30','Index',this)">
+📊 US30
 </button>
 
 </div>
 
 
-<div class="chart-box">
+<!-- CHART -->
 
-<div class="chart-placeholder">
+<section class="chart-card">
 
-<div class="symbol"
-id="symbol">
-XAU/USD
+<div class="chart-header">
+
+<div class="symbol" id="symbol">
+BTC/USD
 </div>
 
-<div>
-Live chart will connect to the selected
-market-data provider.
+<div class="live">
+● LIVE DATA
 </div>
 
 </div>
 
+
+<div class="chart">
+
+<div class="chart-message">
+
+<h2 id="chartTitle">
+BTC/USD
+</h2>
+
+<p>
+Live market chart will appear here after
+the approved market-data feed is connected.
+</p>
+
+<p>
+No artificial prices are displayed.
+</p>
+
 </div>
 
+</div>
 
-<div class="info">
+</section>
+
+
+<!-- MARKET INFO -->
+
+<div class="info-grid">
 
 <div class="card">
+
+<small>Asset Class</small>
+
+<h3 id="asset">
+Crypto
+</h3>
+
+</div>
+
+
+<div class="card">
+
+<small>Price</small>
+
+<h3 id="price">
+Waiting for feed
+</h3>
+
+</div>
+
+
+<div class="card">
+
 <small>Trend</small>
+
 <h3 id="trend">
 Waiting
 </h3>
+
 </div>
 
+
 <div class="card">
+
 <small>Support</small>
+
 <h3 id="support">
 Waiting
 </h3>
+
 </div>
 
+
 <div class="card">
+
 <small>Resistance</small>
+
 <h3 id="resistance">
 Waiting
 </h3>
+
 </div>
 
+
 <div class="card">
+
 <small>Signal</small>
+
 <h3 id="signal">
 WAIT
 </h3>
+
 </div>
 
 </div>
+
+
+<!-- AI ANALYSIS -->
+
+<section class="analysis">
+
+<h2>🧠 Project X Market Analysis</h2>
+
+<div class="status" id="analysis">
+
+Waiting for market data...
+
+Once the feed is connected, Project X will evaluate
+trend, support/resistance, momentum, indicators,
+and risk conditions before generating a paper-trading
+signal.
+
+</div>
+
+<div class="warning">
+
+⚠️ Paper Trading Mode — no real-money order is being
+placed by this page.
+
+</div>
+
+</section>
+
+</main>
 
 
 <script>
 
-function selectMarket(symbol, button){
+function selectMarket(symbol, assetClass, button){
 
 document
-.querySelectorAll(".market-buttons button")
+.querySelectorAll(".market-btn")
 .forEach(function(btn){
 
 btn.classList.remove("active");
@@ -208,20 +409,41 @@ btn.classList.remove("active");
 
 button.classList.add("active");
 
+
 document.getElementById("symbol")
 .textContent = symbol;
 
+document.getElementById("chartTitle")
+.textContent = symbol;
+
+document.getElementById("asset")
+.textContent = assetClass;
+
+document.getElementById("price")
+.textContent =
+"Waiting for feed";
+
 document.getElementById("trend")
-.textContent = "Analyzing";
+.textContent =
+"Waiting";
 
 document.getElementById("support")
-.textContent = "Analyzing";
+.textContent =
+"Waiting";
 
 document.getElementById("resistance")
-.textContent = "Analyzing";
+.textContent =
+"Waiting";
 
 document.getElementById("signal")
-.textContent = "WAIT";
+.textContent =
+"WAIT";
+
+document.getElementById("analysis")
+textContent =
+"Waiting for live market data for "
++ symbol
++ "...";
 
 }
 
