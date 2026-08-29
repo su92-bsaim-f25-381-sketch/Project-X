@@ -12,7 +12,7 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .card h3 { margin-top: 0; color: #94a3b8; font-size: 1.05rem; }
-        .metric-title { font-size: 0.85rem; color: #64748b; }
+        .metric-title { font-size: 0.85rem; color: #64748b; margin-top: 5px; display: block; }
         .metric-value { font-size: 1.7rem; font-weight: bold; color: #38bdf8; margin-top: 5px; }
         
         .thinking-box { background: #0f172a; border-left: 4px solid #38bdf8; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
@@ -27,6 +27,8 @@
         .btn-stop { background-color: #ef4444; color: #fff; }
         .btn-stop:hover { background-color: #dc2626; }
         .btn-update { background-color: #0ea5e9; color: #fff; }
+        .btn-login { background-color: #8b5cf6; color: #fff; }
+        .btn-login:hover { background-color: #7c3aed; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; font-size: 0.9rem; }
@@ -42,28 +44,39 @@
     <div class="container">
         <h1>🤖 Project X - Auto Trading Bot Dashboard</h1>
 
-        <!-- Top Controls Grid -->
+        <!-- Controls Grid -->
         <div class="grid">
+            <!-- Exness Login Card -->
             <div class="card">
-                <h3>⚙️ Account Balance</h3>
-                <label class="metric-title">Customize Balance ($)</label>
-                <input type="number" id="balanceInput" value="1000">
-                <button class="btn btn-update" onclick="updateBalance()">Update Balance</button>
+                <h3>🔑 Exness MT5 Login</h3>
+                <label class="metric-title">Account Login ID</label>
+                <input type="number" id="exnessLogin" placeholder="e.g. 12345678">
+                <label class="metric-title">Password</label>
+                <input type="password" id="exnessPassword" placeholder="MT5 Password">
+                <label class="metric-title">Server</label>
+                <input type="text" id="exnessServer" placeholder="e.g. Exness-MT5Real9">
+                <button class="btn btn-login" onclick="loginExness()">Connect Account</button>
             </div>
+
+            <!-- Risk Control -->
             <div class="card">
                 <h3>🛡️ Risk Control</h3>
                 <label class="metric-title">Risk Per Trade (%)</label>
                 <input type="number" id="riskInput" value="2.0" step="0.5">
                 <button class="btn btn-update" onclick="updateRisk()">Update Risk</button>
             </div>
+
+            <!-- SL & TP Settings -->
             <div class="card">
                 <h3>🎯 SL & TP Settings</h3>
                 <label class="metric-title">Stop Loss (Pips)</label>
                 <input type="number" id="slInput" value="20" min="5">
-                <label class="metric-title" style="margin-top:5px; display:block;">Take Profit (Pips)</label>
+                <label class="metric-title">Take Profit (Pips)</label>
                 <input type="number" id="tpInput" value="40" min="5">
                 <button class="btn btn-update" onclick="updateSLTP()">Update SL/TP</button>
             </div>
+
+            <!-- Bot Power Control -->
             <div class="card">
                 <h3>⚡ Bot Power Control</h3>
                 <p>Status: <span id="statusBadge" class="badge badge-paused">PAUSED</span></p>
@@ -149,18 +162,23 @@
             }
         }
 
-        async function toggleBot() {
-            await fetch('/api/toggle', { method: 'POST' });
+        async function loginExness() {
+            const login = document.getElementById('exnessLogin').value;
+            const password = document.getElementById('exnessPassword').value;
+            const server = document.getElementById('exnessServer').value;
+
+            const res = await fetch('/api/login_exness', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login, password, server })
+            });
+            const data = await res.json();
+            alert(data.message);
             fetchStatus();
         }
 
-        async function updateBalance() {
-            const balance = document.getElementById('balanceInput').value;
-            await fetch('/api/update_balance', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ balance })
-            });
+        async function toggleBot() {
+            await fetch('/api/toggle', { method: 'POST' });
             fetchStatus();
         }
 
@@ -203,70 +221,3 @@
     </script>
 </body>
 </html>
-
-<%PYTHON_SERVER_START%>
-from flask import Flask, jsonify, request, send_file
-from bot_engine import ProjectXEngine
-
-app = Flask(__name__)
-engine = ProjectXEngine()
-custom_balance = 1000.0
-
-@app.route("/")
-def home():
-    return send_file("index.html")
-
-@app.route("/api/status", methods=["GET"])
-def get_status():
-    bal = engine.get_account_balance() if engine.mt5_connected else custom_balance
-    return jsonify({
-        "balance": round(bal, 2),
-        "risk_percentage": engine.risk_percentage,
-        "stop_loss": engine.stop_loss_pips,
-        "take_profit": engine.take_profit_pips,
-        "is_active": engine.is_active,
-        "total_trades": engine.total_trades,
-        "wins": engine.wins,
-        "losses": engine.losses,
-        "win_rate": engine.win_rate(),
-        "trade_history": engine.trade_history[::-1]
-    })
-
-@app.route("/api/toggle", methods=["POST"])
-def toggle():
-    engine.is_active = not engine.is_active
-    return jsonify({"success": True, "is_active": engine.is_active})
-
-@app.route("/api/update_balance", methods=["POST"])
-def update_balance():
-    global custom_balance
-    data = request.json
-    custom_balance = float(data.get("balance", custom_balance))
-    return jsonify({"success": True})
-
-@app.route("/api/update_risk", methods=["POST"])
-def update_risk():
-    data = request.json
-    engine.risk_percentage = float(data.get("risk_percentage", 2.0))
-    return jsonify({"success": True})
-
-@app.route("/api/update_sltp", methods=["POST"])
-def update_sltp():
-    data = request.json
-    engine.stop_loss_pips = int(data.get("stop_loss", 20))
-    engine.take_profit_pips = int(data.get("take_profit", 40))
-    return jsonify({"success": True})
-
-@app.route("/api/tick", methods=["POST"])
-def tick():
-    if not engine.is_active:
-        return jsonify({"thinking": "Bot Paused."})
-
-    signal, thinking = engine.analyze_strategy()
-    if signal != "NEUTRAL":
-        engine.execute_trade(signal)
-    
-    return jsonify({"thinking": thinking, "signal": signal})
-
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
