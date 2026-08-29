@@ -10,9 +10,13 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Project X</title>
+    <title>Project X - Live Market</title>
 
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -32,17 +36,41 @@
         }
 
         .container {
-            padding: 20px;
             max-width: 1100px;
             margin: auto;
+            padding: 16px;
         }
 
         .card {
             background: #111824;
             border: 1px solid #263246;
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px;
             margin-bottom: 15px;
+        }
+
+        .price {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .live {
+            color: #00e676;
+            font-weight: bold;
+        }
+
+        .chart {
+            width: 100%;
+            height: 420px;
+            background: #080d15;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
         }
 
         button {
@@ -60,8 +88,8 @@
         }
 
         .status {
-            color: #00e676;
-            font-weight: bold;
+            margin-top: 10px;
+            color: #9ba8ba;
         }
 
     </style>
@@ -91,14 +119,54 @@
         <div class="card">
 
             <h2>
-                🤖 Bot
+                ₿ BTC / USDT
+            </h2>
+
+            <div
+                id="connection"
+                class="live"
+            >
+                ● CONNECTING...
+            </div>
+
+            <div
+                id="price"
+                class="price"
+            >
+                Loading...
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                📈 Live BTC Chart
+            </h2>
+
+            <div class="chart">
+
+                <canvas
+                    id="chartCanvas"
+                ></canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                🤖 Project X Bot
             </h2>
 
             <p>
                 Bot Status:
                 <span
-                    id="status"
-                    class="status"
+                    id="botStatus"
+                    class="live"
                 >
                     OFF
                 </span>
@@ -110,52 +178,12 @@
                 ON / OFF BOT
             </button>
 
-        </div>
-
-
-        <div class="card">
-
-            <h2>
-                💰 Trading Balance
-            </h2>
-
-            <p>
-                Balance:
-                $<span id="balance">
-                    10000
-                </span>
-            </p>
-
-            <input
-                id="balanceInput"
-                type="number"
-                value="10000"
+            <div
+                id="analysis"
+                class="status"
             >
-
-            <br><br>
-
-            <button
-                onclick="changeBalance()"
-            >
-                APPLY BALANCE
-            </button>
-
-        </div>
-
-
-        <div class="card">
-
-            <h2>
-                📊 Market
-            </h2>
-
-            <p>
-                BTC/USD
-            </p>
-
-            <p>
-                Live market dashboard ready.
-            </p>
+                Bot is currently OFF.
+            </div>
 
         </div>
 
@@ -166,60 +194,341 @@
     <script>
 
 
+        let socket;
+
         let botOn = false;
 
+        let currentPrice = 0;
 
-        function toggleBot() {
-
-            botOn = !botOn;
-
-
-            const status =
-                document.getElementById("status");
+        let prices = [];
 
 
-            if (botOn) {
+        const priceElement =
+            document.getElementById(
+                "price"
+            );
 
-                status.textContent = "ON";
 
-            } else {
+        const connectionElement =
+            document.getElementById(
+                "connection"
+            );
 
-                status.textContent = "OFF";
 
-            }
+        const canvas =
+            document.getElementById(
+                "chartCanvas"
+            );
+
+
+        const ctx =
+            canvas.getContext("2d");
+
+
+        function connectBinance() {
+
+
+            socket =
+                new WebSocket(
+                    "wss://stream.binance.com:9443/ws/btcusdt@trade"
+                );
+
+
+            socket.onopen =
+                function () {
+
+                    connectionElement.textContent =
+                        "● BINANCE LIVE";
+
+                };
+
+
+            socket.onmessage =
+                function (event) {
+
+
+                    const data =
+                        JSON.parse(
+                            event.data
+                        );
+
+
+                    currentPrice =
+                        Number(data.p);
+
+
+                    priceElement.textContent =
+                        "$" +
+                        currentPrice.toFixed(2);
+
+
+                    prices.push(
+                        currentPrice
+                    );
+
+
+                    if (
+                        prices.length > 100
+                    ) {
+
+                        prices.shift();
+
+                    }
+
+
+                    drawChart();
+
+
+                    if (botOn) {
+
+                        analyseMarket();
+
+                    }
+
+                };
+
+
+            socket.onerror =
+                function () {
+
+                    connectionElement.textContent =
+                        "● CONNECTION ERROR";
+
+                };
+
+
+            socket.onclose =
+                function () {
+
+                    connectionElement.textContent =
+                        "● DISCONNECTED";
+
+                };
 
         }
 
 
-        function changeBalance() {
-
-            const input =
-                document.getElementById(
-                    "balanceInput"
-                );
+        function drawChart() {
 
 
-            const balance =
-                Number(input.value);
+            const parent =
+                canvas.parentElement;
 
 
-            if (balance <= 0) {
+            canvas.width =
+                parent.clientWidth;
 
-                alert(
-                    "Please enter a valid balance."
-                );
+
+            canvas.height =
+                parent.clientHeight;
+
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            if (
+                prices.length < 2
+            ) {
 
                 return;
 
             }
 
 
-            document.getElementById(
-                "balance"
-            ).textContent =
-                balance.toFixed(2);
+            const min =
+                Math.min(...prices);
+
+
+            const max =
+                Math.max(...prices);
+
+
+            const range =
+                max - min || 1;
+
+
+            ctx.beginPath();
+
+
+            prices.forEach(
+                function (
+                    value,
+                    index
+                ) {
+
+
+                    const x =
+                        index *
+                        (
+                            canvas.width /
+                            (prices.length - 1)
+                        );
+
+
+                    const y =
+                        canvas.height -
+                        (
+                            (
+                                (value - min) /
+                                range
+                            ) *
+                            (
+                                canvas.height - 30
+                            )
+                        ) -
+                        15;
+
+
+                    if (index === 0) {
+
+                        ctx.moveTo(
+                            x,
+                            y
+                        );
+
+                    } else {
+
+                        ctx.lineTo(
+                            x,
+                            y
+                        );
+
+                    }
+
+                }
+            );
+
+
+            ctx.strokeStyle =
+                "#4da3ff";
+
+
+            ctx.lineWidth = 2;
+
+
+            ctx.stroke();
 
         }
+
+
+        function toggleBot() {
+
+
+            botOn = !botOn;
+
+
+            const status =
+                document.getElementById(
+                    "botStatus"
+                );
+
+
+            const analysis =
+                document.getElementById(
+                    "analysis"
+                );
+
+
+            if (botOn) {
+
+
+                status.textContent =
+                    "ON";
+
+
+                analysis.textContent =
+                    "Project X is monitoring BTC/USDT live market data.";
+
+            } else {
+
+
+                status.textContent =
+                    "OFF";
+
+
+                analysis.textContent =
+                    "Bot is currently OFF.";
+
+            }
+
+        }
+
+
+        function analyseMarket() {
+
+
+            if (
+                prices.length < 20
+            ) {
+
+                return;
+
+            }
+
+
+            const oldPrice =
+                prices[
+                    prices.length - 20
+                ];
+
+
+            const movement =
+                (
+                    (
+                        currentPrice -
+                        oldPrice
+                    ) /
+                    oldPrice
+                ) * 100;
+
+
+            let signal =
+                "WAIT";
+
+
+            if (
+                movement > 0.20
+            ) {
+
+                signal =
+                    "BUY WATCH";
+
+            }
+
+
+            if (
+                movement < -0.20
+            ) {
+
+                signal =
+                    "SELL WATCH";
+
+            }
+
+
+            document.getElementById(
+                "analysis"
+            ).textContent =
+                "BTC/USDT movement: " +
+                movement.toFixed(3) +
+                "% • Signal: " +
+                signal;
+
+        }
+
+
+        window.addEventListener(
+            "resize",
+            drawChart
+        );
+
+
+        connectBinance();
 
 
     </script>
