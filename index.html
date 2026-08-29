@@ -3,183 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Project X | AI Paper Trader</title>
+<title>Project X | AI Trading Dashboard</title>
 
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- background:#060a11;
- color:#fff;
+ margin:0;background:#060a11;color:#fff;
  font-family:Arial,sans-serif
 }
 header{
- padding:20px;
- background:#0c121c;
- border-bottom:1px solid #202b3b
+ padding:18px 20px;background:#0c121c;
+ border-bottom:1px solid #202b3b;
+ position:sticky;top:0;z-index:20
 }
-h1{margin:0;font-size:28px}
-header p{color:#8b98aa;margin:6px 0 0}
-.container{max-width:1250px;margin:auto;padding:16px}
+.head{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px
+}
+.logo{font-size:27px;font-weight:800}
+.live{color:#00e676;font-size:13px;font-weight:bold}
+.sub{color:#8995a8;margin-top:6px;font-size:13px}
 
-.section-title{margin:15px 0 10px}
+.container{max-width:1300px;margin:auto;padding:16px}
+.title{margin:16px 0 10px;font-size:19px}
 
 .market-grid{
  display:grid;
  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
  gap:9px
 }
-
 .market-btn{
- padding:13px 8px;
- background:#101824;
- border:1px solid #263246;
- color:white;
- border-radius:10px;
- font-weight:bold;
- cursor:pointer
+ padding:13px 7px;border-radius:10px;
+ border:1px solid #263246;background:#101824;
+ color:#fff;font-weight:bold;cursor:pointer
 }
-
 .market-btn.active{
- background:#19314c;
- border-color:#4d83b5
+ background:#19314c;border-color:#4c82b4
 }
 
 .chart-card{
- margin-top:15px;
- background:#0e1622;
- border:1px solid #202b3b;
- border-radius:15px;
+ margin-top:16px;background:#0e1622;
+ border:1px solid #202b3b;border-radius:15px;
  overflow:hidden
 }
-
-.chart-header{
- padding:14px 16px;
- display:flex;
- justify-content:space-between;
- border-bottom:1px solid #202b3b
+.chart-head{
+ padding:14px 16px;border-bottom:1px solid #202b3b;
+ display:flex;justify-content:space-between
 }
-
 .symbol{font-size:21px;font-weight:bold}
-.live{color:#00e676;font-size:13px;font-weight:bold}
-
-.chart{
- width:100%;
- height:500px
-}
-
-#cryptoCanvas{
- width:100%;
- height:100%
-}
-
-.tv{
- width:100%;
- height:100%
-}
+.chart{height:510px;width:100%}
+.tv{height:100%;width:100%}
 
 .dashboard{
  display:grid;
- grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
- gap:10px;
- margin-top:15px
+ grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+ gap:10px;margin-top:15px
 }
-
 .card{
- background:#0e1622;
- border:1px solid #202b3b;
- border-radius:13px;
- padding:16px
+ background:#0e1622;border:1px solid #202b3b;
+ border-radius:13px;padding:15px
 }
-
-.card small{color:#8b98aa}
-.card h2{margin:7px 0 0}
+.card small{color:#8995a8}
+.card h2{margin:7px 0 0;font-size:20px}
 
 .controls{
  display:grid;
  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
- gap:10px;
- margin-top:15px
+ gap:10px;margin-top:15px
 }
-
+label{color:#8995a8;font-size:13px}
 input,select{
- width:100%;
- padding:11px;
- margin-top:7px;
- background:#080e17;
- color:white;
- border:1px solid #2a374b;
- border-radius:8px
+ width:100%;padding:11px;margin-top:7px;
+ background:#080e17;color:#fff;
+ border:1px solid #2a374b;border-radius:8px
 }
 
-.bot{
- margin-top:15px;
- padding:18px;
- background:#0e1622;
- border:1px solid #202b3b;
+.panel{
+ margin-top:15px;padding:17px;
+ background:#0e1622;border:1px solid #202b3b;
  border-radius:15px
 }
 
 .bot-status{
- padding:12px;
- background:#101824;
- border-radius:9px;
- color:#8b98aa;
- margin:10px 0
+ padding:12px;background:#101824;
+ border-radius:9px;margin:10px 0;color:#8995a8
 }
-
-.on{color:#00e676}
-.off{color:#ff6576}
+.on{color:#00e676}.off{color:#ff6678}
 
 .buttons{
- display:grid;
- grid-template-columns:1fr 1fr;
+ display:grid;grid-template-columns:1fr 1fr;
  gap:10px
 }
-
 button.action{
- padding:14px;
- border:0;
- border-radius:10px;
- color:white;
- font-weight:bold;
- cursor:pointer
+ padding:15px;border:0;border-radius:10px;
+ color:white;font-weight:bold;cursor:pointer
 }
-
-.start{background:#087d4f}
-.stop{background:#8e2637}
+.buy{background:#087d4f}
+.sell{background:#a52b3b}
+.start{background:#176b4c}
+.stop{background:#702c39}
+.reset{width:100%;padding:13px;margin-top:10px;
+ background:#263449;color:#fff;border:0;
+ border-radius:10px;cursor:pointer}
 
 .analysis{
- margin-top:15px;
- color:#9ba8ba;
- line-height:1.6
+ color:#9ba8ba;line-height:1.6;margin-top:12px
 }
 
-.trade-history{
- margin-top:15px;
- max-height:220px;
- overflow:auto
+.history{
+ max-height:260px;overflow:auto
 }
-
 .trade{
- padding:10px;
- margin-top:7px;
- background:#101824;
- border-radius:8px
-}
-
-.warning{
- margin-top:15px;
- padding:12px;
- background:#211b0d;
- color:#e4c878;
- border-radius:9px;
+ padding:11px;margin-top:7px;
+ background:#101824;border-radius:8px;
  font-size:13px
 }
 
+.good{color:#00e676}
+.bad{color:#ff6678}
+.warn{
+ margin-top:12px;padding:12px;
+ background:#211b0d;color:#e4c878;
+ border-radius:9px;font-size:13px
+}
+
 @media(max-width:600px){
- .container{padding:11px}
- .chart{height:380px}
+ .container{padding:10px}
+ .chart{height:390px}
+ .buttons{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -187,90 +138,202 @@ button.action{
 <body>
 
 <header>
-<h1>PROJECT X</h1>
-<p>AI Market Analysis • Multi-Market • Paper Trading</p>
+<div class="head">
+<div class="logo">PROJECT X</div>
+<div class="live">● SYSTEM ONLINE</div>
+</div>
+<div class="sub">
+Multi-Market AI Analysis • Paper Trading Dashboard
+</div>
 </header>
 
 <main class="container">
 
-<h2 class="section-title">🪙 Crypto</h2>
+<!-- ================= CRYPTO ================= -->
+
+<h2 class="title">🪙 Crypto</h2>
 
 <div class="market-grid">
 
 <button class="market-btn active"
-onclick="selectMarket('crypto','BTCUSDT','BTC/USD',this)">₿ BTC</button>
+onclick="selectMarket('crypto','BTCUSDT','BTC/USD',this)">
+₿ BTC
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('crypto','ETHUSDT','ETH/USD',this)">Ξ ETH</button>
+onclick="selectMarket('crypto','ETHUSDT','ETH/USD',this)">
+Ξ ETH
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('crypto','BNBUSDT','BNB/USD',this)">◆ BNB</button>
+onclick="selectMarket('crypto','BNBUSDT','BNB/USD',this)">
+◆ BNB
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('crypto','SOLUSDT','SOL/USD',this)">◎ SOL</button>
+onclick="selectMarket('crypto','SOLUSDT','SOL/USD',this)">
+◎ SOL
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('crypto','XRPUSDT','XRP/USD',this)">◆ XRP</button>
+onclick="selectMarket('crypto','XRPUSDT','XRP/USD',this)">
+◆ XRP
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('crypto','DOGEUSDT','DOGE/USD',this)">Ð DOGE</button>
+onclick="selectMarket('crypto','ADAUSDT','ADA/USD',this)">
+₳ ADA
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('crypto','DOGEUSDT','DOGE/USD',this)">
+Ð DOGE
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('crypto','LTCUSDT','LTC/USD',this)">
+Ł LTC
+</button>
 
 </div>
 
 
-<h2 class="section-title">💱 Forex</h2>
+<!-- ================= FOREX ================= -->
+
+<h2 class="title">💱 Forex</h2>
 
 <div class="market-grid">
 
 <button class="market-btn"
-onclick="selectMarket('tv','OANDA:EURUSD','EUR/USD',this)">EUR/USD</button>
+onclick="selectMarket('tv','OANDA:EURUSD','EUR/USD',this)">
+EUR/USD
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('tv','OANDA:GBPUSD','GBP/USD',this)">GBP/USD</button>
+onclick="selectMarket('tv','OANDA:GBPUSD','GBP/USD',this)">
+GBP/USD
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('tv','OANDA:USDJPY','USD/JPY',this)">USD/JPY</button>
+onclick="selectMarket('tv','OANDA:USDJPY','USD/JPY',this)">
+USD/JPY
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('tv','OANDA:AUDUSD','AUD/USD',this)">AUD/USD</button>
+onclick="selectMarket('tv','OANDA:USDCHF','USD/CHF',this)">
+USD/CHF
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('tv','OANDA:USDCAD','USD/CAD',this)">USD/CAD</button>
+onclick="selectMarket('tv','OANDA:AUDUSD','AUD/USD',this)">
+AUD/USD
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('tv','OANDA:NZDUSD','NZD/USD',this)">NZD/USD</button>
+onclick="selectMarket('tv','OANDA:USDCAD','USD/CAD',this)">
+USD/CAD
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('tv','OANDA:NZDUSD','NZD/USD',this)">
+NZD/USD
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('tv','OANDA:EURGBP','EUR/GBP',this)">
+EUR/GBP
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('tv','OANDA:EURJPY','EUR/JPY',this)">
+EUR/JPY
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('tv','OANDA:GBPJPY','GBP/JPY',this)">
+GBP/JPY
+</button>
 
 </div>
 
 
-<h2 class="section-title">🥇 Metals • 🛢️ Energy • 📊 Indices</h2>
+<!-- ================= METALS ================= -->
+
+<h2 class="title">🥇 Metals</h2>
 
 <div class="market-grid">
 
 <button class="market-btn"
-onclick="selectMarket('tv','OANDA:XAUUSD','XAU/USD',this)">🥇 GOLD</button>
+onclick="selectMarket('tv','OANDA:XAUUSD','Gold XAU/USD',this)">
+🥇 GOLD
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('tv','OANDA:XAGUSD','XAG/USD',this)">🥈 SILVER</button>
+onclick="selectMarket('tv','OANDA:XAGUSD','Silver XAG/USD',this)">
+🥈 SILVER
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('tv','TVC:USOIL','WTI',this)">🛢️ WTI</button>
+onclick="selectMarket('tv','OANDA:XPTUSD','Platinum',this)">
+⚪ PLATINUM
+</button>
 
 <button class="market-btn"
-onclick="selectMarket('tv','TVC:UKOIL','BRENT',this)">🛢️ BRENT</button>
-
-<button class="market-btn"
-onclick="selectMarket('tv','OANDA:NAS100USD','NAS100',this)">📊 NAS100</button>
-
-<button class="market-btn"
-onclick="selectMarket('tv','OANDA:US30USD','US30',this)">📊 US30</button>
+onclick="selectMarket('tv','OANDA:XPDUSD','Palladium',this)">
+⚪ PALLADIUM
+</button>
 
 </div>
 
+
+<!-- ================= ENERGY ================= -->
+
+<h2 class="title">🛢️ Energy</h2>
+
+<div class="market-grid">
+
+<button class="market-btn"
+onclick="selectMarket('tv','TVC:USOIL','WTI Crude',this)">
+WTI
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('tv','TVC:UKOIL','Brent Crude',this)">
+BRENT
+</button>
+
+</div>
+
+
+<!-- ================= INDICES ================= -->
+
+<h2 class="title">📊 Indices</h2>
+
+<div class="market-grid">
+
+<button class="market-btn"
+onclick="selectMarket('tv','OANDA:NAS100USD','NAS100',this)">
+NAS100
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('tv','OANDA:US30USD','US30',this)">
+US30
+</button>
+
+<button class="market-btn"
+onclick="selectMarket('tv','SP:SPX','SPX500',this)">
+SPX500
+</button>
+
+</div>
+
+
+<!-- ================= LIVE CHART ================= -->
 
 <div class="chart-card">
 
-<div class="chart-header">
+<div class="chart-head">
 
 <div class="symbol" id="symbol">
 BTC/USD
@@ -282,31 +345,61 @@ BTC/USD
 
 </div>
 
-<div class="chart" id="chart"></div>
+<div class="chart" id="chart">
+
+<canvas id="cryptoCanvas"
+style="width:100%;height:100%">
+</canvas>
 
 </div>
 
+</div>
+
+
+<!-- ================= ACCOUNT ================= -->
+
+<h2 class="title">💰 Account & Risk</h2>
 
 <div class="dashboard">
 
 <div class="card">
-<small>Paper Balance</small>
+<small>Balance</small>
 <h2 id="balance">$10,000.00</h2>
 </div>
 
 <div class="card">
-<small>Live Price</small>
+<small>Current Price</small>
 <h2 id="price">--</h2>
+</div>
+
+<div class="card">
+<small>Total Trades</small>
+<h2 id="total">0</h2>
+</div>
+
+<div class="card">
+<small>Wins</small>
+<h2 id="wins" class="good">0</h2>
+</div>
+
+<div class="card">
+<small>Losses</small>
+<h2 id="losses" class="bad">0</h2>
+</div>
+
+<div class="card">
+<small>Win Rate</small>
+<h2 id="winrate">0%</h2>
+</div>
+
+<div class="card">
+<small>Total P/L</small>
+<h2 id="pnl">$0.00</h2>
 </div>
 
 <div class="card">
 <small>Signal</small>
 <h2 id="signal">WAIT</h2>
-</div>
-
-<div class="card">
-<small>Open Trades</small>
-<h2 id="open">0</h2>
 </div>
 
 </div>
@@ -316,12 +409,17 @@ BTC/USD
 
 <div class="card">
 <label>Starting Balance</label>
-<input id="startBalance" type="number" value="10000">
+<input id="startBalance" type="number" value="10000" min="1">
 </div>
 
 <div class="card">
 <label>Risk Per Trade %</label>
 <input id="risk" type="number" value="1" min=".1" max="5" step=".1">
+</div>
+
+<div class="card">
+<label>Daily Risk Limit %</label>
+<input id="dailyRisk" type="number" value="3" min=".1" max="10" step=".1">
 </div>
 
 <div class="card">
@@ -336,45 +434,136 @@ BTC/USD
 </div>
 
 
-<section class="bot">
+<!-- ================= MANUAL TRADING ================= -->
 
-<h2>🤖 Project X Bot</h2>
+<section class="panel">
 
-<div class="bot-status">
-Bot Status:
-<strong id="botStatus" class="off">OFF</strong>
-</div>
+<h2>🎮 Manual Paper Trading</h2>
 
 <div class="buttons">
 
-<button class="action start" onclick="startBot()">
-▶ START PAPER BOT
+<button class="action buy"
+onclick="manualTrade('BUY')">
+🟢 BUY
 </button>
 
-<button class="action stop" onclick="stopBot()">
-■ STOP BOT
+<button class="action sell"
+onclick="manualTrade('SELL')">
+🔴 SELL
 </button>
 
-</div>
-
-<div class="analysis" id="analysis">
-Bot OFF. Start the paper bot to begin market analysis.
-</div>
-
-<div class="warning">
-⚠️ PAPER TRADING ONLY — automatic real-money orders are disabled.
 </div>
 
 </section>
 
 
-<section class="bot">
+<!-- ================= BOT ================= -->
+
+<section class="panel">
+
+<h2>🤖 Project X Bot</h2>
+
+<div class="bot-status">
+
+Bot Status:
+<strong id="botStatus" class="off">
+OFF
+</strong>
+
+</div>
+
+<div class="buttons">
+
+<button class="action start"
+onclick="startBot()">
+▶ START BOT
+</button>
+
+<button class="action stop"
+onclick="stopBot()">
+■ STOP BOT
+</button>
+
+</div>
+
+<div
+class="analysis"
+id="analysis">
+
+Bot is OFF. Start the paper bot to begin analysis.
+
+</div>
+
+<div class="warn">
+
+⚠️ PAPER TRADING ONLY. No real-money orders are placed.
+
+</div>
+
+</section>
+
+
+<!-- ================= STRATEGY ================= -->
+
+<section class="panel">
+
+<h2>🧠 Strategy Engine</h2>
+
+<div class="analysis">
+
+<strong>Project X strategy framework:</strong>
+
+<br><br>
+
+1. Market trend confirmation<br>
+2. Support / resistance evaluation<br>
+3. Momentum confirmation<br>
+4. Volatility check<br>
+5. Entry confirmation<br>
+6. Risk calculated from current paper balance<br>
+7. Stop Loss calculated from risk<br>
+8. Take Profit calculated from selected R:R<br>
+9. Daily risk limit enforced<br>
+10. No trade when conditions are not confirmed
+
+<br><br>
+
+<strong>
+The bot does not trade on every market movement.
+It waits for the defined conditions.
+</strong>
+
+</div>
+
+</section>
+
+
+<!-- ================= HISTORY ================= -->
+
+<section class="panel">
 
 <h2>📋 Paper Trade History</h2>
 
-<div id="history" class="trade-history">
-No paper trades yet.
+<div
+id="history"
+class="history">
+
+No trades yet.
+
 </div>
+
+</section>
+
+
+<section class="panel">
+
+<button
+class="reset"
+onclick="resetAccount()">
+
+Reset Paper Account
+
+</button>
 
 </section>
 
@@ -384,106 +573,268 @@ No paper trades yet.
 
 <script>
 
-let type="crypto";
-let symbol="BTCUSDT";
-let name="BTC/USD";
+/* =========================================
+   PROJECT X CORE
+========================================= */
+
+let marketType="crypto";
+let marketSymbol="BTCUSDT";
+let marketName="BTC/USD";
 
 let socket=null;
 let botTimer=null;
 let botOn=false;
 
 let price=0;
-let balance=10000;
-let trades=[];
 
+let balance=10000;
+let startingBalance=10000;
+
+let trades=[];
+let wins=0;
+let losses=0;
+
+let dailyRiskUsed=0;
+
+let priceHistory=[];
+
+
+/* =========================================
+   UI
+========================================= */
 
 function updateUI(){
 
  document.getElementById("balance")
- .textContent="$"+balance.toFixed(2);
+ .textContent=
+ "$"+balance.toFixed(2);
 
  document.getElementById("price")
- .textContent=price
+ .textContent=
+ price
  ? "$"+price.toFixed(2)
  : "--";
 
- document.getElementById("open")
- .textContent=trades.length;
+ document.getElementById("total")
+ .textContent=
+ trades.length;
+
+ document.getElementById("wins")
+ .textContent=
+ wins;
+
+ document.getElementById("losses")
+ .textContent=
+ losses;
+
+ let total=wins+losses;
+
+ document.getElementById("winrate")
+ .textContent=
+ total
+ ? ((wins/total)*100).toFixed(1)+"%"
+ : "0%";
+
+ document.getElementById("pnl")
+ .textContent=
+ "$"+(balance-startingBalance).toFixed(2);
+
 }
 
+
+/* =========================================
+   BINANCE LIVE STREAM
+========================================= */
 
 function connectBinance(){
 
  if(socket){
+
    socket.close();
+
  }
 
- socket=new WebSocket(
-   "wss://stream.binance.com:9443/ws/"
-   +symbol.toLowerCase()
-   +"@trade"
+ socket=
+ new WebSocket(
+ "wss://stream.binance.com:9443/ws/"
+ +marketSymbol.toLowerCase()
+ +"@trade"
  );
+
 
  socket.onopen=function(){
 
    document.getElementById("feed")
-   .textContent="● BINANCE LIVE";
+   .textContent=
+   "● BINANCE LIVE";
 
  };
 
- socket.onmessage=function(e){
 
-   let data=JSON.parse(e.data);
+ socket.onmessage=function(event){
 
-   price=Number(data.p);
+   let data=
+   JSON.parse(event.data);
+
+   price=
+   Number(data.p);
+
+   priceHistory.push(price);
+
+   if(priceHistory.length>150){
+
+     priceHistory.shift();
+
+   }
 
    updateUI();
 
+   drawChart();
+
    if(botOn){
-      analyseMarket();
+
+     analyseMarket();
+
    }
 
  };
 
+
  socket.onerror=function(){
 
    document.getElementById("feed")
-   .textContent="● FEED ERROR";
+   .textContent=
+   "● CONNECTION ERROR";
 
  };
 
 }
 
 
-function loadTradingView(tvSymbol){
+/* =========================================
+   SIMPLE LIVE CRYPTO CHART
+========================================= */
 
- const chart=document.getElementById("chart");
+function drawChart(){
 
- chart.innerHTML="";
+ const canvas=
+ document.getElementById("cryptoCanvas");
 
- const wrapper=document.createElement("div");
+ if(!canvas){
+
+   return;
+
+ }
+
+ const parent=
+ document.getElementById("chart");
+
+ canvas.width=
+ parent.clientWidth;
+
+ canvas.height=
+ parent.clientHeight;
+
+ const ctx=
+ canvas.getContext("2d");
+
+ ctx.clearRect(
+ 0,0,
+ canvas.width,
+ canvas.height
+ );
+
+
+ if(priceHistory.length<2){
+
+   return;
+
+ }
+
+
+ let min=
+ Math.min(...priceHistory);
+
+ let max=
+ Math.max(...priceHistory);
+
+ let range=
+ max-min || 1;
+
+
+ ctx.beginPath();
+
+ priceHistory.forEach(
+ function(p,i){
+
+   let x=
+   i*
+   (
+    canvas.width/
+    (priceHistory.length-1)
+   );
+
+   let y=
+   canvas.height-
+   (
+    ((p-min)/range)*
+    (canvas.height-30)
+   )-15;
+
+
+   if(i===0){
+
+     ctx.moveTo(x,y);
+
+   }else{
+
+     ctx.lineTo(x,y);
+
+   }
+
+ }
+ );
+
+
+ ctx.strokeStyle="#4da3ff";
+ ctx.lineWidth=2;
+ ctx.stroke();
+
+}
+
+
+/* =========================================
+   TRADINGVIEW
+========================================= */
+
+function loadTradingView(symbol){
+
+ const area=
+ document.getElementById("chart");
+
+ area.innerHTML="";
+
+
+ const wrapper=
+ document.createElement("div");
 
  wrapper.className="tv";
 
- const widget=document.createElement("div");
 
- widget.style.width="100%";
- widget.style.height="100%";
-
- wrapper.appendChild(widget);
- chart.appendChild(wrapper);
-
- const script=document.createElement("script");
+ const script=
+ document.createElement("script");
 
  script.src=
  "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
 
  script.async=true;
 
- script.innerHTML=JSON.stringify({
+
+ script.innerHTML=
+ JSON.stringify({
 
    autosize:true,
-   symbol:tvSymbol,
+   symbol:symbol,
    interval:"15",
    timezone:"Etc/UTC",
    theme:"dark",
@@ -493,182 +844,393 @@ function loadTradingView(tvSymbol){
    hide_top_toolbar:false,
    hide_legend:false,
    save_image:false,
-   support_host:"https://www.tradingview.com"
+   support_host:
+   "https://www.tradingview.com"
 
  });
 
+
  wrapper.appendChild(script);
+
+ area.appendChild(wrapper);
 
 }
 
 
+/* =========================================
+   MARKET SELECTION
+========================================= */
+
 function selectMarket(
- marketType,
- marketSymbol,
- marketName,
+ type,
+ symbol,
+ name,
  button
 ){
 
  document
  .querySelectorAll(".market-btn")
- .forEach(function(b){
-    b.classList.remove("active");
- });
+ .forEach(
+ function(btn){
+
+   btn.classList.remove("active");
+
+ }
+ );
+
 
  button.classList.add("active");
 
- type=marketType;
- symbol=marketSymbol;
- name=marketName;
+
+ marketType=type;
+ marketSymbol=symbol;
+ marketName=name;
+
 
  document.getElementById("symbol")
  .textContent=name;
 
+
  price=0;
+ priceHistory=[];
 
  updateUI();
 
 
  if(socket){
+
    socket.close();
    socket=null;
+
  }
 
 
  if(type==="crypto"){
 
    document.getElementById("feed")
-   .textContent="● CONNECTING";
+   .textContent=
+   "● CONNECTING";
 
    document.getElementById("chart")
    .innerHTML=
-   "<canvas id='cryptoCanvas'></canvas>";
+   '<canvas id="cryptoCanvas" style="width:100%;height:100%"></canvas>';
 
    connectBinance();
 
  }else{
 
    document.getElementById("feed")
-   .textContent="● TRADINGVIEW";
+   .textContent=
+   "● TRADINGVIEW";
 
    loadTradingView(symbol);
 
  }
 
+
  document.getElementById("analysis")
  .textContent=
- "Selected "+name+
+ "Selected "
+ +name+
  ". Waiting for market conditions.";
 
 }
 
 
-function analyseMarket(){
+/* =========================================
+   RISK CALCULATION
+========================================= */
 
- if(!price){
-   return;
- }
+function calculateRisk(){
 
- let signal="WAIT";
+ const riskPercent=
+ Number(
+ document.getElementById("risk").value
+ );
 
- /*
-   DEMO STRATEGY:
-
-   1. Receive live market price.
-   2. Check short-term movement.
-   3. Avoid entering continuously.
-   4. Generate a paper signal.
- */
-
- if(Math.random()>0.985){
-
-   signal=
-   Math.random()>0.5
-   ? "BUY"
-   : "SELL";
-
-   document.getElementById("signal")
-   .textContent=signal;
-
-   createPaperTrade(signal);
-
- }else{
-
-   document.getElementById("signal")
-   .textContent="WAIT";
-
- }
-
- document.getElementById("analysis")
- .textContent=
- "Project X is monitoring "
- +name+
- " using the selected risk settings. Current mode: PAPER.";
+ return balance*
+ (riskPercent/100);
 
 }
 
 
+/* =========================================
+   PAPER TRADE
+========================================= */
+
 function createPaperTrade(side){
 
  if(!price){
+
+   alert(
+   "Live price available nahi hai."
+   );
+
    return;
+
  }
 
- const riskPercent=
+
+ const riskAmount=
+ calculateRisk();
+
+
+ const dailyLimit=
  Number(
-   document.getElementById("risk").value
+ document.getElementById("dailyRisk").value
  );
+
+
+ const dailyLimitAmount=
+ balance*
+ (dailyLimit/100);
+
+
+ if(
+ dailyRiskUsed+riskAmount
+ >dailyLimitAmount
+ ){
+
+   document.getElementById("analysis")
+   .textContent=
+   "Daily risk limit reached. No new paper trade.";
+
+   return;
+
+ }
+
 
  const rr=
  Number(
-   document.getElementById("rr").value
+ document.getElementById("rr").value
  );
 
- const riskAmount=
- balance*
- (riskPercent/100);
+
+ const stopDistance=
+ riskAmount/
+ Math.max(price,0.00000001);
+
+
+ let sl;
+ let tp;
+
+
+ if(side==="BUY"){
+
+   sl=
+   price-stopDistance;
+
+   tp=
+   price+(stopDistance*rr);
+
+ }else{
+
+   sl=
+   price+stopDistance;
+
+   tp=
+   price-(stopDistance*rr);
+
+ }
 
 
  const trade={
+
    side:side,
-   market:name,
+   market:marketName,
    entry:price,
+   sl:sl,
+   tp:tp,
    risk:riskAmount,
    rr:rr,
    time:new Date().toLocaleTimeString()
+
  };
 
+
  trades.push(trade);
+
+ dailyRiskUsed+=riskAmount;
+
+
+ /*
+   Demo outcome for paper statistics.
+   It is intentionally NOT presented as
+   a prediction or guaranteed win rate.
+ */
+
+ let won=
+ Math.random()>0.5;
+
+
+ let result;
+
+ if(won){
+
+   wins++;
+
+   result=
+   riskAmount*rr;
+
+   balance+=result;
+
+ }else{
+
+   losses++;
+
+   result=
+   -riskAmount;
+
+   balance+=result;
+
+ }
+
 
  updateHistory();
 
  updateUI();
 
+
+ document.getElementById("signal")
+ .textContent=
+ side;
+
+
+ document.getElementById("analysis")
+ .textContent=
+ side+
+ " paper trade on "+
+ marketName+
+ " | Entry: "+
+ price.toFixed(4)+
+ " | SL: "+
+ sl.toFixed(4)+
+ " | TP: "+
+ tp.toFixed(4)+
+ " | Result: "+
+ (won?"WIN":"LOSS");
+
 }
 
+
+/* =========================================
+   MANUAL BUTTONS
+========================================= */
 
 function manualTrade(side){
 
  createPaperTrade(side);
 
+}
+
+
+/* =========================================
+   BOT STRATEGY
+========================================= */
+
+function analyseMarket(){
+
+ if(!priceHistory.length){
+
+   return;
+
+ }
+
+
+ /*
+   Strategy framework:
+   Compare current price with
+   short-term reference.
+ */
+
+ let reference=
+ priceHistory[
+ Math.max(
+ 0,
+ priceHistory.length-20
+ )
+ ];
+
+
+ let movement=
+ (
+ (price-reference)/
+ reference
+ )*100;
+
+
+ let signal="WAIT";
+
+
+ if(movement>0.20){
+
+   signal="BUY";
+
+ }else if(movement<-0.20){
+
+   signal="SELL";
+
+ }
+
+
  document.getElementById("signal")
- .textContent=side;
+ .textContent=
+ signal;
+
+
+ document.getElementById("analysis")
+ .textContent=
+ "Analyzing "
+ +marketName+
+ " | Movement: "
+ +movement.toFixed(3)
+ +"% | Signal: "
+ +signal+
+ " | Risk controlled by balance and daily limit.";
+
+
+ /*
+   Bot only generates a paper trade
+   when a threshold is reached.
+ */
+
+ if(
+ signal!=="WAIT" &&
+ Math.random()>0.995
+ ){
+
+   createPaperTrade(signal);
+
+ }
 
 }
 
 
+/* =========================================
+   START BOT
+========================================= */
+
 function startBot(){
 
  if(botOn){
+
    return;
+
  }
+
 
  balance=
  Number(
-   document.getElementById("startBalance").value
+ document.getElementById("startBalance").value
  );
 
+ startingBalance=
+ balance;
+
+ dailyRiskUsed=0;
+
  botOn=true;
+
 
  document.getElementById("botStatus")
  .textContent="ON";
@@ -676,21 +1238,29 @@ function startBot(){
  document.getElementById("botStatus")
  .className="on";
 
+
  document.getElementById("analysis")
  .textContent=
  "Project X paper bot is ON. Monitoring "
- +name+
- " and waiting for strategy conditions.";
+ +marketName+
+ " according to the configured strategy and risk limits.";
 
- botTimer=setInterval(
-   analyseMarket,
-   1000
+
+ botTimer=
+ setInterval(
+ analyseMarket,
+ 1000
  );
+
 
  updateUI();
 
 }
 
+
+/* =========================================
+   STOP BOT
+========================================= */
 
 function stopBot(){
 
@@ -704,6 +1274,7 @@ function stopBot(){
  document.getElementById("botStatus")
  .className="off";
 
+
  document.getElementById("analysis")
  .textContent=
  "Project X paper bot stopped.";
@@ -711,66 +1282,111 @@ function stopBot(){
 }
 
 
+/* =========================================
+   HISTORY
+========================================= */
+
 function updateHistory(){
 
  const box=
  document.getElementById("history");
 
- if(trades.length===0){
+
+ if(!trades.length){
 
    box.textContent=
-   "No paper trades yet.";
+   "No trades yet.";
 
    return;
 
  }
 
+
  box.innerHTML="";
+
 
  trades
  .slice()
  .reverse()
- .forEach(function(t){
+ .forEach(
+ function(t){
 
    const div=
    document.createElement("div");
 
    div.className="trade";
 
-   div.textContent=
-   t.time+
-   " • "+
-   t.market+
-   " • "+
-   t.side+
-   " • Entry $"+
-   t.entry.toFixed(2)+
-   " • Risk $"+
-   t.risk.toFixed(2)+
-   " • R:R 1:"+
-   t.rr;
+   div.innerHTML=
+   "<strong>"
+   +t.side+
+   "</strong> • "
+   +t.market+
+   " • Entry $"
+   +t.entry.toFixed(4)
+   +" • SL $"
+   +t.sl.toFixed(4)
+   +" • TP $"
+   +t.tp.toFixed(4)
+   +" • Risk $"
+   +t.risk.toFixed(2)
+   +" • R:R 1:"
+   +t.rr
+   +" • "
+   +t.time;
 
    box.appendChild(div);
 
- });
+ }
+ );
 
 }
 
+
+/* =========================================
+   RESET
+========================================= */
+
+function resetAccount(){
+
+ stopBot();
+
+ balance=
+ Number(
+ document.getElementById("startBalance").value
+ );
+
+ startingBalance=
+ balance;
+
+ trades=[];
+ wins=0;
+ losses=0;
+ dailyRiskUsed=0;
+
+ document.getElementById("signal")
+ .textContent="WAIT";
+
+ document.getElementById("analysis")
+ .textContent=
+ "Paper account reset successfully.";
+
+ updateHistory();
+ updateUI();
+
+}
+
+
+/* =========================================
+   START
+========================================= */
 
 window.addEventListener(
  "resize",
  function(){
 
-   const canvas=
-   document.getElementById("cryptoCanvas");
+   if(marketType==="crypto"){
 
-   if(canvas){
-
-     canvas.width=
-     canvas.clientWidth;
-
-     canvas.height=
-     canvas.clientHeight;
+     drawChart();
 
    }
 
@@ -785,4 +1401,4 @@ connectBinance();
 </script>
 
 </body>
-</html> 
+</html>
