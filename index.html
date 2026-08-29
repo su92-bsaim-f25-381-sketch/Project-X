@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Project X | Trading Dashboard</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#070b12;
+    color:#fff;
+}
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:240px;
+    background:#0d121b;
+    border-right:1px solid #202938;
+    padding:20px 14px;
+}
+
+.logo{
+    text-align:center;
+    font-size:25px;
+    font-weight:bold;
+    margin-bottom:30px;
+}
+
+.logo span{
+    color:#00d9ff;
+}
+
+.menu button{
+    width:100%;
+    padding:13px;
+    margin-bottom:7px;
+    border:0;
+    border-radius:10px;
+    background:transparent;
+    color:#9aa6b8;
+    text-align:left;
+    cursor:pointer;
+}
+
+.menu button:hover,
+.menu button.active{
+    background:#192536;
+    color:white;
+}
+
+/* MAIN */
+
+.main{
+    flex:1;
+    padding:25px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.subtitle{
+    color:#8793a6;
+    margin-top:6px;
+}
+
+/* BOT */
+
+.bot-control{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.bot-status{
+    color:#ff5252;
+    font-weight:bold;
+}
+
+.toggle{
+    width:54px;
+    height:30px;
+    border-radius:30px;
+    background:#303846;
+    position:relative;
+    cursor:pointer;
+}
+
+.toggle::after{
+    content:"";
+    width:23px;
+    height:23px;
+    background:white;
+    border-radius:50%;
+    position:absolute;
+    top:3px;
+    left:4px;
+    transition:.3s;
+}
+
+.toggle.on{
+    background:#00a86b;
+}
+
+.toggle.on::after{
+    left:27px;
+}
+
+/* CARDS */
+
+.cards{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+.card{
+    background:#111824;
+    border:1px solid #202b3b;
+    border-radius:15px;
+    padding:20px;
+}
+
+.card-title{
+    color:#8995a8;
+    font-size:13px;
+}
+
+.card-value{
+    font-size:25px;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.green{
+    color:#00e676;
+}
+
+.red{
+    color:#ff5252;
+}
+
+/* SECTION */
+
+.section{
+    margin-top:22px;
+    background:#111824;
+    border:1px solid #202b3b;
+    border-radius:15px;
+    padding:20px;
+}
+
+.section h2{
+    margin-bottom:18px;
+}
+
+/* GRID */
+
+.grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;
+}
+
+.mini-card{
+    background:#0a1018;
+    padding:16px;
+    border-radius:10px;
+}
+
+.mini-card small{
+    color:#8995a8;
+}
+
+.mini-card h3{
+    margin-top:8px;
+}
+
+/* BUTTONS */
+
+.actions{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;
+}
+
+.action-btn{
+    padding:14px;
+    border:0;
+    border-radius:10px;
+    background:#192536;
+    color:#fff;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.action-btn:hover{
+    background:#273950;
+}
+
+/* TABLE */
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid #202938;
+    text-align:left;
+}
+
+th{
+    color:#8995a8;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo{
+        font-size:15px;
+    }
+
+    .menu button{
+        font-size:0;
+        text-align:center;
+    }
+
+    .main{
+        padding:15px;
+    }
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">
+PROJECT <span>X</span>
+</div>
+
+<div class="menu">
+
+<button class="active"
+onclick="showSection('dashboard')">
+🏠 Dashboard
+</button>
+
+<button onclick="showSection('market')">
+📊 Market Analysis
+</button>
+
+<button onclick="showSection('indicators')">
+📈 Indicators
+</button>
+
+<button onclick="showSection('signals')">
+🎯 Trading Signals
+</button>
+
+<button onclick="showSection('risk')">
+🛡️ Risk Management
+</button>
+
+<button onclick="showSection('paper')">
+💰 Paper Trading
+</button>
+
+<button onclick="showSection('history')">
+📋 Trade History
+</button>
+
+<button onclick="showSection('settings')">
+⚙️ Settings
+</button>
+
+</div>
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+<div class="topbar">
+
+<div>
+
+<h1>AI Trading Dashboard</h1>
+
+<div class="subtitle">
+Project X • Paper Trading Mode
+</div>
+
+</div>
+
+<div class="bot-control">
+
+<span
+class="bot-status"
+id="botStatus">
+● BOT OFF
+</span>
+
+<div
+class="toggle"
+id="botToggle"
+onclick="toggleBot()">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard">
+
+<div class="cards">
+
+<div class="card">
+
+<div class="card-title">
+Market
+</div>
+
+<div class="card-value">
+BTC/USD
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Current Price
+</div>
+
+<div class="card-value"
+id="price">
+--
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Market Trend
+</div>
+
+<div class="card-value green"
+id="trend">
+--
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Trading Signal
+</div>
+
+<div class="card-value"
+id="signal">
+WAIT
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<h2>⚡ Quick Actions</h2>
+
+<div class="actions">
+
+<button class="action-btn"
+onclick="showSection('market')">
+📊 Analyze Market
+</button>
+
+<button class="action-btn"
+onclick="showSection('indicators')">
+📈 Indicators
+</button>
+
+<button class="action-btn"
+onclick="showSection('signals')">
+🎯 Signals
+</button>
+
+<button class="action-btn"
+onclick="showSection('risk')">
+🛡️ Risk Manager
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- MARKET -->
+
+<section id="market"
+style="display:none">
+
+<div class="section">
+
+<h2>📊 Market Analysis</h2>
+
+<div class="grid">
+
+<div class="mini-card">
+<small>Current Price</small>
+<h3 id="marketPrice">--</h3>
+</div>
+
+<div class="mini-card">
+<small>Trend</small>
+<h3 id="marketTrend">--</h3>
+</div>
+
+<div class="mini-card">
+<small>Support</small>
+<h3>Waiting</h3>
+</div>
+
+<div class="mini-card">
+<small>Resistance</small>
+<h3>Waiting</h3>
+</div>
+
+<div class="mini-card">
+<small>Buyer Pressure</small>
+<h3>Analyzing</h3>
+</div>
+
+<div class="mini-card">
+<small>Seller Pressure</small>
+<h3>Analyzing</h3>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- INDICATORS -->
+
+<section id="indicators"
+style="display:none">
+
+<div class="section">
+
+<h2>📈 Technical Indicators</h2>
+
+<div class="grid">
+
+<div class="mini-card">
+<small>SMA 20</small>
+<h3>Waiting</h3>
+</div>
+
+<div class="mini-card">
+<small>RSI</small>
+<h3>Coming Soon</h3>
+</div>
+
+<div class="mini-card">
+<small>MACD</small>
+<h3>Coming Soon</h3>
+</div>
+
+<div class="mini-card">
+<small>EMA</small>
+<h3>Coming Soon</h3>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SIGNALS -->
+
+<section id="signals"
+style="display:none">
+
+<div class="section">
+
+<h2>🎯 Trading Signals</h2>
+
+<div class="card">
+
+<div class="card-title">
+Current Signal
+</div>
+
+<div class="card-value"
+id="signalLarge">
+WAIT
+</div>
+
+<p style="color:#8995a8;margin-top:10px;">
+Signal will be generated after market analysis.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- RISK -->
+
+<section id="risk"
+style="display:none">
+
+<div class="section">
+
+<h2>🛡️ Risk Management</h2>
+
+<div class="grid">
+
+<div class="mini-card">
+<small>Total Capital</small>
+<h3>100,000</h3>
+</div>
+
+<div class="mini-card">
+<small>Trading Capital</small>
+<h3>50,000</h3>
+</div>
+
+<div class="mini-card">
+<small>Backup Capital</small>
+<h3>50,000</h3>
+</div>
+
+<div class="mini-card">
+<small>Daily Risk</small>
+<h3>1%</h3>
+</div>
+
+<div class="mini-card">
+<small>Risk / Reward</small>
+<h3>1 : 2 / 1 : 3</h3>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PAPER TRADING -->
+
+<section id="paper"
+style="display:none">
+
+<div class="section">
+
+<h2>💰 Paper Trading</h2>
+
+<div class="grid">
+
+<div class="mini-card">
+<small>Starting Balance</small>
+<h3>100,000</h3>
+</div>
+
+<div class="mini-card">
+<small>Current Balance</small>
+<h3 id="balance">100,000</h3>
+</div>
+
+<div class="mini-card">
+<small>Open Trade</small>
+<h3>None</h3>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- HISTORY -->
+
+<section id="history"
+style="display:none">
+
+<div class="section">
+
+<h2>📋 Trade History</h2>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Symbol</th>
+<th>Side</th>
+<th>Entry</th>
+<th>Exit</th>
+<th>P/L</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td colspan="5">
+No trades yet
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SETTINGS -->
+
+<section id="settings"
+style="display:none">
+
+<div class="section">
+
+<h2>⚙️ Bot Settings</h2>
+
+<div class="grid">
+
+<div class="mini-card">
+<small>Mode</small>
+<h3>Paper Trading</h3>
+</div>
+
+<div class="mini-card">
+<small>Risk</small>
+<h3>1%</h3>
+</div>
+
+<div class="mini-card">
+<small>Risk Reward</small>
+<h3>1 : 2</h3>
+</div>
+
+<div class="mini-card">
+<small>Symbol</small>
+<h3>BTC/USD</h3>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<script>
+
+let botRunning = false;
+
+
+/* SECTION SWITCH */
+
+function showSection(section){
+
+const sections = [
+"dashboard",
+"market",
+"indicators",
+"signals",
+"risk",
+"paper",
+"history",
+"settings"
+];
+
+sections.forEach(function(id){
+
+const element =
+document.getElementById(id);
+
+if(element){
+
+element.style.display =
+id === section
+? "block"
+: "none";
+
+}
+
+});
+
+}
+
+
+/* BOT ON/OFF */
+
+function toggleBot(){
+
+botRunning = !botRunning;
+
+const toggle =
+document.getElementById("botToggle");
+
+const status =
+document.getElementById("botStatus");
+
+if(botRunning){
+
+toggle.classList.add("on");
+
+status.textContent =
+"● BOT ON";
+
+}else{
+
+toggle.classList.remove("on");
+
+status.textContent =
+"● BOT OFF";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
